@@ -25,6 +25,6 @@ void worldDraw(World* world) {
 } 
 
 void worldMove(World* world, float horizontal, float vertical) {
-  backgroundMove(&world->bg, horizontal * world->bgMoveWithGround, vertical * world->bgMoveWithGround);
+  backgroundMove(&world->bg, -horizontal * world->bgMoveWithGround, -vertical * world->bgMoveWithGround);
   groundMove(&world->ground, horizontal, vertical);
 }
