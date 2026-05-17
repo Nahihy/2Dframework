@@ -1,3 +1,4 @@
+#include "2Dframework/gameObject.h"
 #include <2Dframework/ground.h>
 #include <stdlib.h>
 
@@ -44,3 +45,7 @@ int groundCheckCollision(Ground* ground, GameObject* object) {
   return 0;
 }
 
+void groundMove(Ground* ground, float horizontal, float vertical) {
+  for(int i = 0; i < ground->objCount; i++)
+    gameObjectMove(&ground->objArray[i], horizontal, vertical);
+}

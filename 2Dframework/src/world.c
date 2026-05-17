@@ -1,6 +1,6 @@
 #include <2Dframework/2Dframework.h>
 
-World createWorld(Background bg, int initGroundCount, int gravityLevel[2], float playerSpawn[2]) {
+World createWorld(Background bg, int initGroundCount, int gravityLevel[2], float playerSpawn[2], float bgMoveWithGround) {
   World world;
   world.bg = bg;
   world.ground = createGround(initGroundCount);
@@ -8,6 +8,7 @@ World createWorld(Background bg, int initGroundCount, int gravityLevel[2], float
   world.gravityLevel[1] = gravityLevel[1];
   world.playerSpawn[0] = playerSpawn[0];
   world.playerSpawn[1] = playerSpawn[1];
+  world.bgMoveWithGround = bgMoveWithGround;
 
   return world;
 }

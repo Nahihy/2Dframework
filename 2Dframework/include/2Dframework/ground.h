@@ -17,3 +17,4 @@ void groundDelete(Ground* ground);
 void groundAddToSlot(Ground* ground, int slot);
 void groundDraw(Ground* ground);
 int groundCheckCollision(Ground* ground, GameObject* object);
+void groundMove(Ground* ground, float horizontal, float vertical);
