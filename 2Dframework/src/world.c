@@ -1,4 +1,4 @@
-#include <2Dframework/2Dframework.h>
+#include <2Dframework/world.h>
 
 World createWorld(Background bg, int initGroundCount, int gravityLevel[2], float playerSpawn[2], float bgMoveWithGround) {
   World world;
@@ -24,4 +24,7 @@ void worldDraw(World* world) {
   groundDraw(&world->ground);
 } 
 
-
+void worldMove(World* world, float horizontal, float vertical) {
+  backgroundMove(&world->bg, horizontal * world->bgMoveWithGround, vertical * world->bgMoveWithGround);
+  groundMove(&world->ground, horizontal, vertical);
+}

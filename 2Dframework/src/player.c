@@ -1,7 +1,7 @@
-#include "2Dframework/entity.h"
-#include <2Dframework/2Dframework.h>
+#include <2Dframework/player.h>
+#include <stdio.h>
 
-Player createPlayer(const char* image, int colorType, int animationDelay, float maxVelocity, float accelaration, float modelSize[2],
+Player createPlayer(const char* image, int colorType, int animationDelay, float maxVelocity, float accelaration, float jumpPower, float modelSize[2],
                     TexColumn standAnim, TexColumn walkAnim, TexColumn jumpAnim, float xCoord, float yCoord, float width, float height) {
   Player player;
   player.animationDelay = animationDelay;
@@ -21,6 +21,7 @@ Player createPlayer(const char* image, int colorType, int animationDelay, float 
   player.entity.accelaration = accelaration;
   player.entity.currHoriVelocity = 0.0f;
   player.entity.currVertVelocity = 0.0f;
+  player.entity.jumpAccel = 0.0f;
 
   player.entity.obj = createGameObject(image, colorType, GL_MIRRORED_REPEAT, createEntityMesh(player.entity.model.modelsize),  xCoord, yCoord, width, height, 0.0f);
   entityUpdateTex(&player.entity);
@@ -38,14 +39,25 @@ void playerDraw(Player* player) {
 }
 
 void playerGetUserMovement(Player* player, Randerer* randerer, World* world) {
-  int wPressed = glfwGetKey(randerer->window.GLFWwindow, GLFW_KEY_W) == GLFW_PRESS;
+  int spacePressed = glfwGetKey(randerer->window.GLFWwindow, GLFW_KEY_SPACE) == GLFW_PRESS;
   int sPressed = glfwGetKey(randerer->window.GLFWwindow, GLFW_KEY_S) == GLFW_PRESS;
   int dPressed = glfwGetKey(randerer->window.GLFWwindow, GLFW_KEY_D) == GLFW_PRESS;
   int aPressed = glfwGetKey(randerer->window.GLFWwindow, GLFW_KEY_A) == GLFW_PRESS;
   
   entityUpdateMovement(&player->entity, 0.0f, 0.0f, world);
+  
+  worldMove(world, 
+          (player->entity.obj.xCoord >  0.75f ? -(player->entity.obj.xCoord - 0.75f) : 0.0f) +
+          (player->entity.obj.xCoord < -0.75f ? -(player->entity.obj.xCoord + 0.75f) : 0.0f),
+          (player->entity.obj.yCoord >  0.75f ? -(player->entity.obj.yCoord - 0.75f) : 0.0f) +
+          (player->entity.obj.yCoord < -0.75f ? -(player->entity.obj.yCoord + 0.75f) : 0.0f)
+  );
 
-  if(!wPressed && !sPressed && !dPressed && !aPressed) {
+  gameObjectSetLocation(&player->entity.obj, 
+          (player->entity.obj.xCoord >  0.75f ?  0.75f : player->entity.obj.xCoord < -0.75f ? -0.75f : player->entity.obj.xCoord),
+          (player->entity.obj.yCoord >  0.75f ?  0.75f : player->entity.obj.yCoord < -0.75f ? -0.75f : player->entity.obj.yCoord)
+  );
+  if(!spacePressed && !sPressed && !dPressed && !aPressed) {
     entityChangeTexColumn(&player->entity, STAND_ANIM);
     player->delayToNextTex = player->animationDelay;
     return;
@@ -58,8 +70,8 @@ void playerGetUserMovement(Player* player, Randerer* randerer, World* world) {
   }
   else player->delayToNextTex--;
 
-  if(wPressed && player->entity.isOnGround) {
-    entityUpdateMovement(&player->entity, 0.0f, 5.0f, world);
+  if(spacePressed && player->entity.isOnGround) {
+    player->entity.jumpAccel = 1.0f;
     player->entity.isOnGround = 0;
     if(player->entity.model.currModelColumn != JUMP_ANIM) 
       entityChangeTexColumn(&player->entity, JUMP_ANIM);

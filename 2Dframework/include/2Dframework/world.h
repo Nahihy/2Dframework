@@ -13,3 +13,4 @@ typedef struct {
 World createWorld(Background bg, int initGroundCount, int gravityLevel[2], float playerSpawn[2], float bgMoveWithGround);
 void worldDelete(World* world);
 void worldDraw(World* world);
+void worldMove(World* world, float horizontal, float vertical);

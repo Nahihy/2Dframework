@@ -36,6 +36,7 @@ Entity createEntity(const char* image, int colorType, ModelAttrib* model, int ig
   entity.currVertVelocity = 0.0f;
   entity.model.side = RIGHT;
   entity.isOnGround = 0;
+  entity.jumpAccel = 0.0f;
   entity.obj = createGameObject(image, colorType, GL_MIRRORED_REPEAT, createEntityMesh(entity.model.modelsize),  xCoord, yCoord, width, height, 0.0f);
   entityUpdateTex(&entity);
   return entity;
@@ -74,7 +75,8 @@ void entityUpdateMovement(Entity* entity, float horiMovement, float vertMovement
   }  
 
 
-  float totalVertMovement = entity->accelaration * vertMovement - (world->gravityLevel[1] * 0.01f);
+  float totalVertMovement = entity->accelaration * vertMovement - (world->gravityLevel[1] * 0.01f) + entity->jumpAccel;
+  entity->jumpAccel /= 1.5f;
 
   if (!vertMovement) {
     if (entity->currVertVelocity > 0.0f) {

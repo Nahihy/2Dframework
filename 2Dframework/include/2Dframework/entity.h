@@ -37,6 +37,7 @@ typedef struct {
   float currHoriVelocity;
   float currVertVelocity;
   int isOnGround;
+  float jumpAccel;
 } Entity;
 
 
