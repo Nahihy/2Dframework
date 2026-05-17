@@ -1,3 +1,4 @@
+#include "2Dframework/entity.h"
 #include <2Dframework/2Dframework.h>
 
 Player createPlayer(const char* image, int colorType, int animationDelay, float maxVelocity, float accelaration, float modelSize[2],
@@ -50,7 +51,6 @@ void playerGetUserMovement(Player* player, Randerer* randerer, World* world) {
     return;
   }
 
-  if(player->entity.model.currModelColumn != WALK_ANIM) entityChangeTexColumn(&player->entity, WALK_ANIM);
 
   if(player->delayToNextTex <= 0) {
     entityNextTex(&player->entity);
@@ -58,18 +58,24 @@ void playerGetUserMovement(Player* player, Randerer* randerer, World* world) {
   }
   else player->delayToNextTex--;
 
-  if(wPressed) {
-    entityUpdateMovement(&player->entity, 0.0f, 1.0f, world);
-  }
+  if(wPressed && player->entity.isOnGround) {
+    entityUpdateMovement(&player->entity, 0.0f, 5.0f, world);
+    player->entity.isOnGround = 0;
+    if(player->entity.model.currModelColumn != JUMP_ANIM) 
+      entityChangeTexColumn(&player->entity, JUMP_ANIM);
+  }  
   if(sPressed) {
     entityUpdateMovement(&player->entity, 0.0f, -1.0f, world);
+    if(player->entity.model.currModelColumn != JUMP_ANIM) entityChangeTexColumn(&player->entity, JUMP_ANIM);
   }
   if(dPressed) {
     entityUpdateMovement(&player->entity, 1.0f, 0.0f, world);
+    if(player->entity.model.currModelColumn != WALK_ANIM) entityChangeTexColumn(&player->entity, WALK_ANIM);
     entitySwitchToSide(&player->entity, RIGHT);
   }
   if(aPressed) {
     entityUpdateMovement(&player->entity, -1.0f, 0.0f, world);
+    if(player->entity.model.currModelColumn != WALK_ANIM) entityChangeTexColumn(&player->entity, WALK_ANIM);
     entitySwitchToSide(&player->entity, LEFT);
   }
 }

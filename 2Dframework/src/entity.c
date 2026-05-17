@@ -35,6 +35,7 @@ Entity createEntity(const char* image, int colorType, ModelAttrib* model, int ig
   entity.currHoriVelocity = 0.0f;
   entity.currVertVelocity = 0.0f;
   entity.model.side = RIGHT;
+  entity.isOnGround = 0;
   entity.obj = createGameObject(image, colorType, GL_MIRRORED_REPEAT, createEntityMesh(entity.model.modelsize),  xCoord, yCoord, width, height, 0.0f);
   entityUpdateTex(&entity);
   return entity;
@@ -42,35 +43,70 @@ Entity createEntity(const char* image, int colorType, ModelAttrib* model, int ig
 
 void entityUpdateMovement(Entity* entity, float horiMovement, float vertMovement, World* world) {
 
-  float totalEntityMov = entity->accelaration * horiMovement - (world->gravityLevel[0] * 0.01f);
+  float totalHoriMovement = entity->accelaration * horiMovement - (world->gravityLevel[0] * 0.01f);
 
   if (!horiMovement) {
     if (entity->currHoriVelocity > 0.0f) {
-      totalEntityMov -= entity->accelaration / 2.0f;
-      if (entity->currHoriVelocity + totalEntityMov < 0.0f)
-        totalEntityMov = -entity->currHoriVelocity;
+      totalHoriMovement -= entity->accelaration / 2.0f;
+      if (entity->currHoriVelocity + totalHoriMovement < 0.0f)
+        totalHoriMovement = -entity->currHoriVelocity;
     } else if (entity->currHoriVelocity < 0.0f) {
-      totalEntityMov += entity->accelaration / 2.0f;
-      if (entity->currHoriVelocity + totalEntityMov > 0.0f)
-        totalEntityMov = -entity->currHoriVelocity;
+      totalHoriMovement += entity->accelaration / 2.0f;
+      if (entity->currHoriVelocity + totalHoriMovement > 0.0f)
+        totalHoriMovement = -entity->currHoriVelocity;
     }
   }
 
-  if(entity->currHoriVelocity > entity->maxVelocity) totalEntityMov -= entity->accelaration;
-  else if(entity->currHoriVelocity < -entity->maxVelocity) totalEntityMov += entity->accelaration;
+  if(entity->currHoriVelocity > entity->maxVelocity) totalHoriMovement -= entity->accelaration;
+  else if(entity->currHoriVelocity < -entity->maxVelocity) totalHoriMovement += entity->accelaration;
 
-  gameObjectMove(&entity->obj, entity->currHoriVelocity + totalEntityMov, 0);
+  gameObjectMove(&entity->obj, entity->currHoriVelocity + totalHoriMovement, 0);
   if (entity->ignoreCollision == EN_USE_COLLISION && groundCheckCollision(&world->ground, &entity->obj)) {
-    gameObjectMove(&entity->obj, -(entity->currHoriVelocity + totalEntityMov), 0);
+    gameObjectMove(&entity->obj, -(entity->currHoriVelocity + totalHoriMovement), 0);
     entity->currHoriVelocity = 0.0f;
     float step = 0.01f;
-    float dir = (totalEntityMov > 0.0f) ? step : -step;
-    totalEntityMov = 0.0f;
+    float dir = (totalHoriMovement > 0.0f) ? step : -step;
+    totalHoriMovement = 0.0f;
     while (!groundCheckCollision(&world->ground, &entity->obj)) {
       gameObjectMove(&entity->obj, dir, 0);
     }
     gameObjectMove(&entity->obj, -dir, 0);
   }  
+
+
+  float totalVertMovement = entity->accelaration * vertMovement - (world->gravityLevel[1] * 0.01f);
+
+  if (!vertMovement) {
+    if (entity->currVertVelocity > 0.0f) {
+      totalVertMovement -= entity->accelaration / 2.0f;
+      if (entity->currVertVelocity + totalVertMovement < 0.0f)
+        totalVertMovement = -entity->currVertVelocity;
+    } else if (entity->currVertVelocity < 0.0f) {
+      totalVertMovement += entity->accelaration / 2.0f;
+      if (entity->currVertVelocity + totalVertMovement > 0.0f)
+        totalVertMovement = -entity->currVertVelocity;
+    }
+  }
+
+  if(entity->currVertVelocity > entity->maxVelocity) totalVertMovement -= entity->accelaration;
+  else if(entity->currVertVelocity < -entity->maxVelocity) totalVertMovement += entity->accelaration;
+
+  gameObjectMove(&entity->obj, 0, entity->currVertVelocity + totalVertMovement);
+  if (entity->ignoreCollision == EN_USE_COLLISION && groundCheckCollision(&world->ground, &entity->obj)) {
+    gameObjectMove(&entity->obj, 0, -(entity->currVertVelocity + totalVertMovement));
+    entity->currVertVelocity = 0.0f;
+    float step = 0.01f;
+    if (entity->currVertVelocity + totalVertMovement < 0.0f)
+      entity->isOnGround = 1;
+    float dir = (totalVertMovement > 0.0f) ? step : -step;
+    totalVertMovement = 0.0f;
+    while (!groundCheckCollision(&world->ground, &entity->obj)) {
+      gameObjectMove(&entity->obj, 0, dir);
+    }
+    gameObjectMove(&entity->obj, 0, -dir);
+  }  else entity->isOnGround = 0;
+
+
 }
 
 void entityDelete(Entity* entity) {
