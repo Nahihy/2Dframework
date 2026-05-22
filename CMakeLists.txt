@@ -4,7 +4,7 @@ project(test)
 find_package(glfw3 REQUIRED)
 find_package(OpenGL REQUIRED)
 
-add_executable(test main.c)
+add_executable(test libTest.c)
 
 
 set(EMBED_SHADERS  ON  CACHE BOOL "" FORCE)

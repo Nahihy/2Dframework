@@ -54,6 +54,13 @@ void gameObjectResize(GameObject* object, float horizontal, float vertical) {
   object->height += vertical;
   gameObjectUpdate(object);
 }
+
+void gameObjectSetSize(GameObject* object, float height, float width) {
+  object->width = height;
+  object->height = width;
+  gameObjectUpdate(object); 
+}
+
 void gameObjectRotate(GameObject* object, float rotation) {
   object->rotation += rotation;
   gameObjectUpdate(object);

@@ -1,3 +1,4 @@
+#include "2Dframework/gameObject.h"
 #include <2Dframework/entity.h>
 #include <stdio.h>
 
@@ -21,8 +22,8 @@ Mesh createEntityMesh(float texCoord[2]) {
   return createMesh(vertices, 16, indices, 6, attrib, 2);
 }
 
-Entity createEntity(const char* image, int colorType, ModelAttrib* model, int ignoreCollision,
-                    float accelaration, float maxVelocity, float xCoord, float yCoord, float width, float height) {
+Entity createEntity(const char* image, int colorType, ModelAttrib* model, int ignoreCollision, float accelaration,
+                    float maxVelocity, float jumpPower, float xCoord, float yCoord, float width, float height) {
   if(ignoreCollision != EN_IGNORE_COLLISION && ignoreCollision != EN_USE_COLLISION) {
     printf("Warning: invalid collision value in %s entity. only set to \"EN_USE_COLLISION\" or \"EN_IGNORE_COLLISION\", it has been set to ignore", image);
     ignoreCollision = EN_IGNORE_COLLISION;
@@ -36,8 +37,10 @@ Entity createEntity(const char* image, int colorType, ModelAttrib* model, int ig
   entity.currVertVelocity = 0.0f;
   entity.model.side = RIGHT;
   entity.isOnGround = 0;
-  entity.jumpAccel = 0.0f;
-  entity.obj = createGameObject(image, colorType, GL_MIRRORED_REPEAT, createEntityMesh(entity.model.modelsize),  xCoord, yCoord, width, height, 0.0f);
+  entity.currJumpAccel = 0.0f;
+  entity.jumpPower = jumpPower;
+  entity.obj = createGameObject(image, colorType, GL_MIRRORED_REPEAT, createEntityMesh(entity.model.modelsize),
+                                xCoord, yCoord, width, height, 0.0f);
   entityUpdateTex(&entity);
   return entity;
 }
@@ -75,8 +78,8 @@ void entityUpdateMovement(Entity* entity, float horiMovement, float vertMovement
   }  
 
 
-  float totalVertMovement = entity->accelaration * vertMovement - (world->gravityLevel[1] * 0.01f) + entity->jumpAccel;
-  entity->jumpAccel /= 1.5f;
+  float totalVertMovement = entity->accelaration * vertMovement - (world->gravityLevel[1] * 0.01f) + entity->currJumpAccel;
+  entity->currJumpAccel /= 1.5f;
 
   if (!vertMovement) {
     if (entity->currVertVelocity > 0.0f) {
@@ -97,10 +100,9 @@ void entityUpdateMovement(Entity* entity, float horiMovement, float vertMovement
   if (entity->ignoreCollision == EN_USE_COLLISION && groundCheckCollision(&world->ground, &entity->obj)) {
     gameObjectMove(&entity->obj, 0, -(entity->currVertVelocity + totalVertMovement));
     entity->currVertVelocity = 0.0f;
-    float step = 0.01f;
     if (entity->currVertVelocity + totalVertMovement < 0.0f)
       entity->isOnGround = 1;
-    float dir = (totalVertMovement > 0.0f) ? step : -step;
+    float dir = (totalVertMovement > 0.0f) ? 0.1f : -1.0f;
     totalVertMovement = 0.0f;
     while (!groundCheckCollision(&world->ground, &entity->obj)) {
       gameObjectMove(&entity->obj, 0, dir);
@@ -125,6 +127,15 @@ void entityMove(Entity* entity, float horizontal, float vertical) {
 
 void entityResize(Entity* entity, float horizontal, float vertical) {
   gameObjectResize(&entity->obj, horizontal, vertical);
+}
+
+void entityZoom(Entity* entity, float mult) {
+  gameObjectSetSize(&entity->obj, entity->obj.height * mult, entity->obj.width * mult);
+  gameObjectSetLocation(&entity->obj, entity->obj.xCoord * mult, entity->obj.yCoord * mult);
+  entity->maxVelocity *= mult;
+  entity->accelaration *= mult;
+  entity->currJumpAccel *= mult;
+  entity->jumpPower *= mult;
 }
 
 void entityNextTex(Entity* entity) {
@@ -159,4 +170,10 @@ void entityUpdateTex(Entity* entity) {
 void entitySwitchToSide(Entity* entity, Direction side) {
   entity->model.side = side;
   entityUpdateTex(entity);
+}
+
+void entityJump(Entity* entity, World* world) {
+  entity->currJumpAccel = entity->jumpPower;
+  entity->isOnGround = 0;
+  entityUpdateMovement(entity, 0.0f, 0.0f, world);
 }

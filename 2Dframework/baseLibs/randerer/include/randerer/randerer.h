@@ -37,17 +37,6 @@ static void inline randererSetAutoFrameResizingKeepRatio(Randerer* randerer) {
   windowSetAutoFrameResizingKeepRatio(&randerer->window);
 }
 
-// static void inline randererSetAutoFrameResizingKeepRatioPreferHeight(Randerer* randerer) {
-//   glfwSetWindowUserPointer(randerer->window.GLFWwindow, &randerer->window);
-//   windowSetAutoFrameResizingKeepRatioPreferHeight(&randerer->window);
-// }
-//
-// static void inline randererSetAutoFrameResizingKeepRatioPreferWidth(Randerer* randerer) {
-//   glfwSetWindowUserPointer(randerer->window.GLFWwindow, &randerer->window);
-//   windowSetAutoFrameResizingKeepRatioPreferWidth(&randerer->window);
-// }
-
-
 float randererGetDeltaTime(Randerer* randerer);
 
 Sprite createSprite(Mesh* mesh, Shader* shader, Texture* texture);

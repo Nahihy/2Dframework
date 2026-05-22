@@ -15,8 +15,6 @@ void windowDelete(Window* window);
 void frameBufferSize_callback(GLFWwindow* window, int width, int height);
 void frameBufferSizeKeepRatio_callback(GLFWwindow* window, int width, int height);
 
-// void frameBufferSizeKeepRatioPreferHeight_callback(GLFWwindow* window, int width, int height);
-// void frameBufferSizeKeepRatioPreferWidth_callback(GLFWwindow* window, int width, int height);
 int inline windowShouldclose(Window* window) {
   return glfwWindowShouldClose(window->GLFWwindow);
 }
@@ -30,9 +28,3 @@ static void inline windowSetAutoFrameResizing(Window* window) {
 static void inline windowSetAutoFrameResizingKeepRatio(Window* window) {
   glfwSetFramebufferSizeCallback(window->GLFWwindow, frameBufferSizeKeepRatio_callback);
 }
-// static void inline windowSetAutoFrameResizingKeepRatioPreferHeight(Window* window) {
-//   glfwSetFramebufferSizeCallback(window->GLFWwindow, frameBufferSizeKeepRatioPreferHeight_callback);
-// }
-// static void inline windowSetAutoFrameResizingKeepRatioPreferWidth(Window* window) {
-//   glfwSetFramebufferSizeCallback(window->GLFWwindow, frameBufferSizeKeepRatioPreferWidth_callback);
-// }

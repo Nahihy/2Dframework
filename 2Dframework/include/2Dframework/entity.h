@@ -37,13 +37,15 @@ typedef struct {
   float currHoriVelocity;
   float currVertVelocity;
   int isOnGround;
-  float jumpAccel;
+  float currJumpAccel;
+  int delayToNextTex;
+  float jumpPower;
 } Entity;
 
 
 
-Entity createEntity(const char* image, int colorType, ModelAttrib* model, int ignoreCollision,
-                    float accelaration, float maxVelocity, float xCoord, float yCoord, float width, float height);
+Entity createEntity(const char* image, int colorType, ModelAttrib* model, int ignoreCollision, float accelaration,
+                    float maxVelocity, float jumpPower, float xCoord, float yCoord, float width, float height);
 void entityDelete(Entity* entity);
 void entityDraw(Entity* entity);
 void entityResize(Entity* entity, float horizontal, float vertical);
@@ -52,4 +54,6 @@ void entityNextTex(Entity* entity);
 void entityUpdateTex(Entity* entity);
 void entityUpdateMovement(Entity* entity, float horiMovement, float vertMovement, World* world);
 void entitySwitchToSide(Entity* entity, Direction side);
+void entityZoom(Entity* entity, float mult);
+void entityJump(Entity* entity, World* world);
 Mesh createEntityMesh(float texCoord[2]);

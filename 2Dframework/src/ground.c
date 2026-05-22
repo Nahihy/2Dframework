@@ -49,3 +49,10 @@ void groundMove(Ground* ground, float horizontal, float vertical) {
   for(int i = 0; i < ground->objCount; i++)
     gameObjectMove(&ground->objArray[i], horizontal, vertical);
 }
+
+void groundZoom(Ground* ground, float mult) {
+  for(int i = 0; i < ground->objCount; i++) {
+    gameObjectSetLocation(&ground->objArray[i], ground->objArray[i].xCoord * mult, ground->objArray[i].yCoord * mult);
+    gameObjectSetSize(&ground->objArray[i], ground->objArray[i].height * mult, ground->objArray[i].width * mult);
+  }
+}

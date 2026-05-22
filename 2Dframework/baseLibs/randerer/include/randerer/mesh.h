@@ -13,7 +13,8 @@ typedef struct {
   unsigned int indexCount;
   unsigned int VAO, VBO, EBO;
 } Mesh;
-Mesh createMesh(float* vertices,unsigned int vertexCount, unsigned int* indices,unsigned int indexCount, VertexAttrib* attrib, unsigned int attribCount);
+Mesh createMesh(float* vertices,unsigned int vertexCount, unsigned int* indices, unsigned int indexCount,
+                VertexAttrib* attrib, unsigned int attribCount);
 void meshChangeVerticies(Mesh* mesh, float* verticies);
 void meshUse(Mesh* mesh);
 void meshDraw(Mesh* mesh);
