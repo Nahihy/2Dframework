@@ -1,5 +1,6 @@
 #include <database/database.h>
 #include <string.h>
+#include <math.h>
 
 Database createDatabase(const char* fileName) {
   Database database;
@@ -21,38 +22,45 @@ void databaseDelete(Database* database) {
   database->fileName = NULL;
 }
 
-int databaseGetVarLocation(Database* database, const char* varName) {
-  if(database->file == NULL) databaseOpen(database, "r"); 
-  char line[256];
+long databaseGetVarLocation(Database* database, const char* varName) {
+  databaseOpen(database, "r"); 
+  char line[512];
   char extractedName[128];
 
-  int lineCounter = 0;
   while(fgets(line, sizeof(line), database->file)) {
     sscanf(line, "%[^=]", extractedName);
     
-    if(strcmp(extractedName, varName)) {
+    if(!strcmp(extractedName, varName)) {
       databaseClose(database);
-      return lineCounter;
+      return ftell(database->file);
     }
-    lineCounter++;
   }
   printf("Warning: could not find var \"%s\" in database \"%s\"", varName, database->fileName);
-  return -1;
+  return NAN;
 }
 
-void databaseSetInt(Database* database, const char* varName, int value) {
+void databaseAddInt(Database* database, const char* varName, int value) {
   databaseOpen(database, "a");
-  fprintf(database->file, "%s=%d", varName, value);
+  fprintf(database->file, "%s=%d\n", varName, value);
 }
-void databaseSetFloat(Database* database, const char* varName, float value) {
+void databaseAddFloat(Database* database, const char* varName, float value) {
   databaseOpen(database, "a");
-  fprintf(database->file, "%s=%f", varName, value);
+  fprintf(database->file, "%s=%\n", varName, value);
 }
-void databaseSetString(Database* database, const char* varName, const char* value) {
+void databaseAddString(Database* database, const char* varName, const char* value) {
   databaseOpen(database, "a");
-  fprintf(database->file, "%s=%s", varName, value);
+  fprintf(database->file, "%s=%s\n", varName, value);
 }
-void databaseSetChar(Database* database, const char* varName, char value) {
+void databaseAddChar(Database* database, const char* varName, char value) {
   databaseOpen(database, "a");
-  fprintf(database->file, "%s=%c", varName, value);
+  fprintf(database->file, "%s=%c\n", varName, value);
 }
+
+
+int databaseGetInt(Database* database, const char* varName) {
+
+}
+float databaseGetFloat(Database* database, const char* varName);
+char* databaseGetString(Database* database, const char* varName);
+char databaseGetChar(Database* database, const char* varName);
+
