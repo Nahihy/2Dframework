@@ -40,4 +40,19 @@ int databaseGetVarLocation(Database* database, const char* varName) {
   return -1;
 }
 
-
+void databaseSetInt(Database* database, const char* varName, int value) {
+  databaseOpen(database, "a");
+  fprintf(database->file, "%s=%d", varName, value);
+}
+void databaseSetFloat(Database* database, const char* varName, float value) {
+  databaseOpen(database, "a");
+  fprintf(database->file, "%s=%f", varName, value);
+}
+void databaseSetString(Database* database, const char* varName, const char* value) {
+  databaseOpen(database, "a");
+  fprintf(database->file, "%s=%s", varName, value);
+}
+void databaseSetChar(Database* database, const char* varName, char value) {
+  databaseOpen(database, "a");
+  fprintf(database->file, "%s=%c", varName, value);
+}
