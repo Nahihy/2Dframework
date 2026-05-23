@@ -1,5 +1,4 @@
 #include <2Dframework/player.h>
-#include <stdio.h>
 
 Player createPlayer(const char* image, int colorType, int animationDelay, float maxVelocity, float accelaration, float jumpPower, float modelSize[2],
                     TexColumn standAnim, TexColumn walkAnim, TexColumn jumpAnim, float xCoord, float yCoord, float width, float height) {
@@ -73,6 +72,7 @@ void playerGetUserMovement(Player* player, Randerer* randerer, World* world) {
   else player->delayToNextTex--;
 
   if(spacePressed && player->entity.isOnGround) {
+    entityJump(&player->entity, world);
     if(player->entity.model.currModelColumn != JUMP_ANIM) 
       entityChangeTexColumn(&player->entity, JUMP_ANIM);
   }  

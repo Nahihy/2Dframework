@@ -38,8 +38,8 @@ int main() {
 
     playerDraw(&player);
     playerGetUserMovement(&player, &randerer, &world);
-    // groundZoom(&world.ground, 0.9991f);
-    // entityZoom(&player.entity, 0.9999991f);
+    groundZoom(&world.ground, 1.0001f);
+    entityZoom(&player.entity, 1.0001f);
     randererSwapBuffers(&randerer);
   }
   worldDelete(&world);
