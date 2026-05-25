@@ -8,7 +8,6 @@ add_executable(test libTest.c)
 
 
 set(EMBED_SHADERS  ON  CACHE BOOL "" FORCE)
-set(EMBED_TEXTURES OFF CACHE BOOL "" FORCE)
 set(TEXTURE_DIR "textures" CACHE STRING "" FORCE)
 set(TEXTURE_EXTENSIONS "png;jpg"   CACHE STRING "" FORCE)
 

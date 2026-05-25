@@ -1,5 +1,3 @@
-#include "2Dframework/background.h"
-#include "2Dframework/world.h"
 #include <2Dframework/2Dframework.h>
 
 int main() {
@@ -8,7 +6,7 @@ int main() {
   randererSetAutoFrameResizingKeepRatio(&randerer);
 
   World world = createWorld(createBackground("background.png", GL_RGBA, 0.0f, 0.2f, 0.2f, 0.0f, BG_REPEAT),
-                            1024, (int[2]){0, 2}, (float[2]){0.0f, 0.1f}, 0.1f);
+                            1024, (int[2]){0, 4}, (float[2]){0.0f, 0.1f}, 0.1f);
   
   groundAdd(&world.ground, "brick.png", GL_RGBA, GO_SQUARE,  1.0f,  -0.6f, 0.1f, 0.1f, 0.0f);
   groundAdd(&world.ground, "brick.png", GL_RGBA, GO_SQUARE, -1.0f,  2.0f, 0.1f, 0.1f, 0.0f);
@@ -39,8 +37,8 @@ int main() {
     
     playerDraw(&player);
     playerGetUserMovement(&player, &randerer, &world);
-    worldZoom(&world, 1.001f);
-    entityZoom(&player.entity, 1.001);
+    // worldZoom(&world, 1.001f);
+    // entityZoom(&player.entity, 1.001);
     randererSwapBuffers(&randerer);
   }
   worldDelete(&world);

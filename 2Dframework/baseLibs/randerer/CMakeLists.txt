@@ -11,16 +11,9 @@ if(NOT DEFINED SHADER_EXTENSIONS)
   set(SHADER_EXTENSIONS "glsl" CACHE STRING "Shader file extensions")
 endif()
 
-if(NOT DEFINED EMBED_TEXTURES)
-  option(EMBED_TEXTURES "Embed textures into binary at compile time" OFF)
-endif()
 if(NOT DEFINED TEXTURE_DIR)
   set(TEXTURE_DIR "textures" CACHE STRING "Texture directory")
 endif()
-if(NOT DEFINED TEXTURE_EXTENSIONS)
-  set(TEXTURE_EXTENSIONS "png;jpg;jpeg" CACHE STRING "Texture file extensions")
-endif()
-
 
 add_library(randerer STATIC
   src/camera.c
@@ -47,7 +40,6 @@ target_link_libraries(randerer PUBLIC glfw glad stb OpenGL::GL cglm m)
 target_compile_definitions(randerer PUBLIC
   SHADER_DIR="shaders"
   TEXTURE_DIR="textures"
-  FONT_DIR="fonts"
 )
 if(IS_ABSOLUTE "${SHADER_DIR}")
   set(SHADER_SEARCH_DIR "${SHADER_DIR}")
@@ -55,7 +47,6 @@ else()
   set(SHADER_SEARCH_DIR "${CMAKE_SOURCE_DIR}/${SHADER_DIR}")
 endif()
 
-# ---- shader embedding ----
 if(EMBED_SHADERS)
 
   set(GLSL_FILES "")
@@ -134,83 +125,5 @@ else()
   set(TEXTURE_SEARCH_DIR "${CMAKE_SOURCE_DIR}/${TEXTURE_DIR}")
 endif()
 
-# ---- texture embedding ----
-if(EMBED_TEXTURES)
-
-  set(TEXTURE_FILES "")
-  foreach(EXT ${TEXTURE_EXTENSIONS})
-    file(GLOB_RECURSE TMP "${TEXTURE_SEARCH_DIR}/*.${EXT}")
-    list(APPEND TEXTURE_FILES ${TMP})
-  endforeach()
-
-  list(GET TEXTURE_EXTENSIONS 0 FIRST_TEXTURE_EXT)
-  set(GENERATED_TEXTURE_HEADERS "")
-
-  foreach(TEXTURE_FILE ${TEXTURE_FILES})
-    file(RELATIVE_PATH REL_PATH "${TEXTURE_SEARCH_DIR}" "${TEXTURE_FILE}")
-    string(REPLACE ".${FIRST_TEXTURE_EXT}" ".h" OUTPUT_REL "${REL_PATH}")
-    foreach(EXT ${TEXTURE_EXTENSIONS})
-      string(REPLACE ".${EXT}" ".h" OUTPUT_REL "${OUTPUT_REL}")
-    endforeach()
-    set(OUTPUT_FILE "${CMAKE_CURRENT_BINARY_DIR}/embedded_textures/${OUTPUT_REL}")
-
-    string(REPLACE "/" "_" VAR_NAME "${REL_PATH}")
-    string(REPLACE "." "_" VAR_NAME "${VAR_NAME}")
-    string(REPLACE "-" "_" VAR_NAME "${VAR_NAME}")
-    string(TOUPPER "${VAR_NAME}" GUARD)
-    string(PREPEND GUARD "TEXTURE_")
-
-    add_custom_command(
-      OUTPUT "${OUTPUT_FILE}"
-      COMMAND ${CMAKE_COMMAND}
-        -DINPUT_FILE=${TEXTURE_FILE}
-        -DOUTPUT_FILE=${OUTPUT_FILE}
-        -DVAR_NAME=${VAR_NAME}
-        -DGUARD=${GUARD}
-        -P ${CMAKE_CURRENT_SOURCE_DIR}/cmake/embed_file.cmake
-      DEPENDS "${TEXTURE_FILE}"
-      COMMENT "Embedding texture ${REL_PATH}"
-    )
-    list(APPEND GENERATED_TEXTURE_HEADERS "${OUTPUT_FILE}")
-  endforeach()
-
-  set(MASTER_TEXTURE_HEADER "${CMAKE_CURRENT_BINARY_DIR}/embedded_textures/all_textures.h")
-  set(MASTER_TEXTURE_CONTENT "#ifndef TEXTURE_ALL_TEXTURES_H\n#define TEXTURE_ALL_TEXTURES_H\n")
-  set(TEXTURE_LOOKUP_HEADER "${CMAKE_CURRENT_BINARY_DIR}/embedded_textures/texture_lookup.h")
-  set(TEXTURE_LOOKUP_CONTENT "#ifndef TEXTURE_LOOKUP_H\n#define TEXTURE_LOOKUP_H\n")
-  string(APPEND TEXTURE_LOOKUP_CONTENT "#include \"all_textures.h\"\n#include <string.h>\n\n")
-  string(APPEND TEXTURE_LOOKUP_CONTENT "typedef struct { const unsigned char* data; unsigned int len; } TextureData;\n\n")
-  string(APPEND TEXTURE_LOOKUP_CONTENT "static inline TextureData lookupTexture(const char* path) {\n")
-  string(APPEND TEXTURE_LOOKUP_CONTENT "  TextureData empty = {0, 0};\n")
-
-  foreach(TEXTURE_FILE ${TEXTURE_FILES})
-    file(RELATIVE_PATH REL_PATH "${TEXTURE_SEARCH_DIR}" "${TEXTURE_FILE}")
-    string(REPLACE "/" "_" VAR_NAME "${REL_PATH}")
-    string(REPLACE "." "_" VAR_NAME "${VAR_NAME}")
-    string(REPLACE "-" "_" VAR_NAME "${VAR_NAME}")
-    string(REPLACE ".${FIRST_TEXTURE_EXT}" ".h" OUTPUT_REL "${REL_PATH}")
-    foreach(EXT ${TEXTURE_EXTENSIONS})
-      string(REPLACE ".${EXT}" ".h" OUTPUT_REL "${OUTPUT_REL}")
-    endforeach()
-    string(APPEND MASTER_TEXTURE_CONTENT "#include \"${OUTPUT_REL}\"\n")
-    string(APPEND TEXTURE_LOOKUP_CONTENT "  if (strcmp(path, \"${REL_PATH}\") == 0) { TextureData d = {${VAR_NAME}, ${VAR_NAME}_len}; return d; }\n")
-  endforeach()
-
-  string(APPEND MASTER_TEXTURE_CONTENT "#endif\n")
-  string(APPEND TEXTURE_LOOKUP_CONTENT "  return empty;\n}\n#endif\n")
-  file(WRITE "${MASTER_TEXTURE_HEADER}" "${MASTER_TEXTURE_CONTENT}")
-  file(WRITE "${TEXTURE_LOOKUP_HEADER}" "${TEXTURE_LOOKUP_CONTENT}")
-
-  add_custom_target(randerer_textures DEPENDS ${GENERATED_TEXTURE_HEADERS})
-  add_dependencies(randerer randerer_textures)
-  target_include_directories(randerer PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/embedded_textures)
-  target_compile_definitions(randerer PRIVATE EMBED_TEXTURES)
-else()
-  add_custom_target(copy-texture-dir ALL
-    COMMAND ${CMAKE_COMMAND} -E copy_directory ${TEXTURE_SEARCH_DIR} ${CMAKE_BINARY_DIR}/textures)
-endif()
-if(IS_ABSOLUTE "${FONT_DIR}")
-  set(FONT_SEARCH_DIR "${FONT_DIR}")
-else()
-  set(FONT_SEARCH_DIR "${CMAKE_SOURCE_DIR}/${FONT_DIR}")
-endif()
+add_custom_target(copy-texture-dir ALL
+  COMMAND ${CMAKE_COMMAND} -E copy_directory ${TEXTURE_SEARCH_DIR} ${CMAKE_BINARY_DIR}/textures)
