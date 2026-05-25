@@ -4,9 +4,11 @@
 Background createBackground(const char* image, int colorType, float left, float right, float up, float down, int bgMode) {
   Background background;
   glm_vec2((vec2){0.0f, 0.0f}, background.texOffset);
+  background.texZoom = 1.0f;
   Shader shader = createShader("background/vertex.glsl", "background/fragment.glsl");
   shaderSetVec2(&shader, "texOffset", background.texOffset);
   shaderSetInt(&shader, "tex", 0);
+  shaderSetFloat(&shader, "texZoom", background.texZoom);
   float vertices[16] = {
    -1.0f, 1.0f,   left, up,
     1.0f, 1.0f,   right, up,
@@ -52,5 +54,10 @@ void backgroundMove(Background* background, float horizontal, float vertical) {
   background->texOffset[0] += horizontal;
   background->texOffset[1] += vertical;
   shaderSetVec2(&background->sprite.shader, "texOffset", background->texOffset);
+}
+
+void backgroundZoom(Background* background, float mult) {
+  background->texZoom *= mult;
+  shaderSetFloat(&background->sprite.shader, "texZoom", background->texZoom);
 }
 

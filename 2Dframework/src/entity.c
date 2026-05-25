@@ -1,4 +1,3 @@
-#include "2Dframework/gameObject.h"
 #include <2Dframework/entity.h>
 #include <stdio.h>
 
@@ -41,6 +40,7 @@ Entity createEntity(const char* image, int colorType, ModelAttrib* model, int ig
   entity.jumpPower = jumpPower;
   entity.obj = createGameObject(image, colorType, GL_MIRRORED_REPEAT, createEntityMesh(entity.model.modelsize),
                                 xCoord, yCoord, width, height, 0.0f);
+  entity.collisionStep = 0.1f;
   entityUpdateTex(&entity);
   return entity;
 }
@@ -68,8 +68,7 @@ void entityUpdateMovement(Entity* entity, float horiMovement, float vertMovement
   if (entity->ignoreCollision == EN_USE_COLLISION && groundCheckCollision(&world->ground, &entity->obj)) {
     gameObjectMove(&entity->obj, -(entity->currHoriVelocity + totalHoriMovement), 0);
     entity->currHoriVelocity = 0.0f;
-    float step = 0.01f;
-    float dir = (totalHoriMovement > 0.0f) ? step : -step;
+    float dir = (totalHoriMovement > 0.0f) ? entity->collisionStep : -entity->collisionStep;
     totalHoriMovement = 0.0f;
     while (!groundCheckCollision(&world->ground, &entity->obj)) {
       gameObjectMove(&entity->obj, dir, 0);
@@ -102,7 +101,7 @@ void entityUpdateMovement(Entity* entity, float horiMovement, float vertMovement
     entity->currVertVelocity = 0.0f;
     if (entity->currVertVelocity + totalVertMovement < 0.0f)
       entity->isOnGround = 1;
-    float dir = (totalVertMovement > 0.0f) ? 0.1f : -1.0f;
+    float dir = (totalVertMovement > 0.0f) ? entity->collisionStep : -entity->collisionStep;
     totalVertMovement = 0.0f;
     while (!groundCheckCollision(&world->ground, &entity->obj)) {
       gameObjectMove(&entity->obj, 0, dir);
@@ -136,8 +135,8 @@ void entityZoom(Entity* entity, float mult) {
   entity->accelaration *= mult;
   entity->currJumpAccel *= mult;
   entity->jumpPower *= mult;
+  entity->collisionStep *= mult;
 }
-
 void entityNextTex(Entity* entity) {
   entity->model.currModel++;
   TexColumn* currColumn = &(entity->model.modelColumns[entity->model.currModelColumn]);

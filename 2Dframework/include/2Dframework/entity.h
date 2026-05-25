@@ -40,6 +40,7 @@ typedef struct {
   float currJumpAccel;
   int delayToNextTex;
   float jumpPower;
+  float collisionStep;
 } Entity;
 
 

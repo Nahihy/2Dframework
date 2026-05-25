@@ -1,6 +1,10 @@
 #pragma once
 #include <stdio.h>
 
+#define DB_MAX_LINE_SIZE 128
+#define DB_FILE_COPY_BUFFER_SIZE 128
+
+
 typedef struct {
   FILE* file;
   const char* fileName;
@@ -16,7 +20,8 @@ float databaseGetFloat(Database* database, const char* varName);
 void databaseGetString(Database* database, char* outputBuffer, const char* varName);
 char databaseGetChar(Database* database, const char* varName);
 long databaseGetVarLocation(Database* database, const char* varName); 
-void databaseAddInt(Database* database, const char* varName, int value);
-void databaseAddFloat(Database* database, const char* varName, float value);
-void databaseAddString(Database* database, const char* varName, const char* value);
-void databaseAddChar(Database* database, const char* varName, char value);
+void databaseSetInt(Database* database, const char* varName, int value);
+void databaseSetFloat(Database* database, const char* varName, float value);
+void databaseSetString(Database* database, const char* varName, const char* value);
+void databaseSetChar(Database* database, const char* varName, char value);
+void databaseRemoveVar(Database* database, const char* varName);

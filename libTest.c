@@ -1,3 +1,5 @@
+#include "2Dframework/background.h"
+#include "2Dframework/world.h"
 #include <2Dframework/2Dframework.h>
 
 int main() {
@@ -30,16 +32,15 @@ int main() {
   glEnable(GL_BLEND);
 
   playerSendPlayerToSpawn(&player, &world);
-
   while(!randererShouldClose(&randerer)) {
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT);
     worldDraw(&world);
-
+    
     playerDraw(&player);
     playerGetUserMovement(&player, &randerer, &world);
-    groundZoom(&world.ground, 1.0001f);
-    entityZoom(&player.entity, 1.0001f);
+    worldZoom(&world, 1.001f);
+    entityZoom(&player.entity, 1.001);
     randererSwapBuffers(&randerer);
   }
   worldDelete(&world);

@@ -12,7 +12,8 @@ Ground createGround(int initialMaxCount) {
   return ground;
 }
 
-void groundAdd(Ground* ground, const char* image, int colorType, Mesh mesh, float xCoord, float yCoord, float width, float height, float rotation) {
+void groundAdd(Ground* ground, const char* image, int colorType, Mesh mesh,
+               float xCoord, float yCoord, float width, float height, float rotation) {
   if(ground->maxCount <= ground->objCount)
     groundEnlarge(ground, 1);
   ground->objArray[ground->objCount] = createGameObject(image, colorType, GL_REPEAT, mesh, xCoord, yCoord, width, height, rotation);

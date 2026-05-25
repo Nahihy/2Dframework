@@ -1,3 +1,5 @@
+#include "2Dframework/background.h"
+#include "2Dframework/ground.h"
 #include <2Dframework/world.h>
 
 World createWorld(Background bg, int initGroundCount, int gravityLevel[2], float playerSpawn[2], float bgMoveWithGround) {
@@ -27,4 +29,9 @@ void worldDraw(World* world) {
 void worldMove(World* world, float horizontal, float vertical) {
   backgroundMove(&world->bg, -horizontal * world->bgMoveWithGround, -vertical * world->bgMoveWithGround);
   groundMove(&world->ground, horizontal, vertical);
+}
+
+void worldZoom(World* world, float mult) {
+  backgroundZoom(&world->bg, mult);
+  groundZoom(&world->ground, mult);
 }

@@ -22,6 +22,7 @@ Player createPlayer(const char* image, int colorType, int animationDelay, float 
   player.entity.currVertVelocity = 0.0f;
   player.entity.currJumpAccel = 0.0f;
   player.entity.jumpPower = jumpPower;
+  player.entity.collisionStep = 0.1f;
 
   player.entity.obj = createGameObject(image, colorType, GL_MIRRORED_REPEAT, createEntityMesh(player.entity.model.modelsize),  xCoord, yCoord, width, height, 0.0f);
   entityUpdateTex(&player.entity);
@@ -40,7 +41,6 @@ void playerDraw(Player* player) {
 
 void playerGetUserMovement(Player* player, Randerer* randerer, World* world) {
   int spacePressed = glfwGetKey(randerer->window.GLFWwindow, GLFW_KEY_SPACE) == GLFW_PRESS;
-  int sPressed = glfwGetKey(randerer->window.GLFWwindow, GLFW_KEY_S) == GLFW_PRESS;
   int dPressed = glfwGetKey(randerer->window.GLFWwindow, GLFW_KEY_D) == GLFW_PRESS;
   int aPressed = glfwGetKey(randerer->window.GLFWwindow, GLFW_KEY_A) == GLFW_PRESS;
   
@@ -57,7 +57,7 @@ void playerGetUserMovement(Player* player, Randerer* randerer, World* world) {
           (player->entity.obj.xCoord >  0.6f ?  0.6f : player->entity.obj.xCoord < -0.6f ? -0.6f : player->entity.obj.xCoord),
           (player->entity.obj.yCoord >  0.6f ?  0.6f : player->entity.obj.yCoord < -0.6f ? -0.6f : player->entity.obj.yCoord)
   );
-  if(!spacePressed && !sPressed && !dPressed && !aPressed) {
+  if(!spacePressed && !dPressed && !aPressed) {
     entityChangeTexColumn(&player->entity, STAND_ANIM);
     player->delayToNextTex = player->animationDelay;
     return;
@@ -65,7 +65,6 @@ void playerGetUserMovement(Player* player, Randerer* randerer, World* world) {
 
 
   if(player->delayToNextTex <= 0) {
-    entityJump(&player->entity, world);
     entityNextTex(&player->entity);
     player->delayToNextTex = player->animationDelay;
   }
@@ -76,10 +75,6 @@ void playerGetUserMovement(Player* player, Randerer* randerer, World* world) {
     if(player->entity.model.currModelColumn != JUMP_ANIM) 
       entityChangeTexColumn(&player->entity, JUMP_ANIM);
   }  
-  if(sPressed) {
-    entityUpdateMovement(&player->entity, 0.0f, -1.0f, world);
-    if(player->entity.model.currModelColumn != JUMP_ANIM) entityChangeTexColumn(&player->entity, JUMP_ANIM);
-  }
   if(dPressed) {
     entityUpdateMovement(&player->entity, 1.0f, 0.0f, world);
     if(player->entity.model.currModelColumn != WALK_ANIM) entityChangeTexColumn(&player->entity, WALK_ANIM);

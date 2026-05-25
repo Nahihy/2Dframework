@@ -17,4 +17,4 @@ add_library(2Dframework STATIC
 )
 
 target_include_directories(2Dframework PUBLIC include)
-target_link_libraries(2Dframework PUBLIC randerer)
+target_link_libraries(2Dframework PUBLIC randerer database)
