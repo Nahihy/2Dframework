@@ -1,4 +1,6 @@
+#include "database/database.h"
 #include <2Dframework/2Dframework.h>
+#include <stdio.h>
 
 
 void getZoomControl(Player* player, World* world, Randerer* randerer) {
@@ -11,6 +13,7 @@ void getZoomControl(Player* player, World* world, Randerer* randerer) {
     entityZoom(&player->entity, 1.05f);
   }
 }
+
 
 int main() {
 

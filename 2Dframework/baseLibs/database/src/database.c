@@ -1,7 +1,6 @@
 #include <database/database.h>
 #include <stdio.h>
 #include <string.h>
-#include <math.h>
 #include <stdlib.h>
 
 Database createDatabase(const char* fileName) {
@@ -30,9 +29,12 @@ long databaseGetVarLocation(Database* database, const char* varName) {
   char extractedName[DB_MAX_LINE_SIZE];
 
   while(fgets(line, sizeof(line), database->file)) {
-    sscanf(line, "%[^=]", extractedName);
+    char formatStr[20];
+    snprintf(formatStr, sizeof(formatStr), "%%%d[^=]", (int)sizeof(extractedName) - 1);
+    sscanf(line, formatStr, extractedName);
     
     if(!strcmp(extractedName, varName)) {
+      fseek(database->file, -strlen(line), SEEK_CUR);
       long location = ftell(database->file);
       databaseClose(database);
       return location;
@@ -40,7 +42,7 @@ long databaseGetVarLocation(Database* database, const char* varName) {
   }
   printf("Warning: could not find var \"%s\" in database \"%s\"", varName, database->fileName);
   databaseClose(database);
-  return NAN;
+  return -1;
 }
 
 void databaseSetInt(Database* database, const char* varName, int value) {
@@ -71,7 +73,7 @@ void databaseSetChar(Database* database, const char* varName, char value) {
 void databaseRemoveVar(Database* database, const char* varName) {
   long location = databaseGetVarLocation(database, varName);
   
-  if (location != location) 
+  if (location == -1) 
     return;
   
   
