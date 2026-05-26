@@ -1,12 +1,24 @@
 #include <2Dframework/2Dframework.h>
 
+
+void getZoomControl(Player* player, World* world, Randerer* randerer) {
+  if(glfwGetKey(randerer->window.GLFWwindow, GLFW_KEY_MINUS) == GLFW_PRESS) {
+    worldZoom(world, 0.95f);
+    entityZoom(&player->entity, 0.95f);
+  }
+  if(glfwGetKey(randerer->window.GLFWwindow, GLFW_KEY_EQUAL) == GLFW_PRESS) {
+    worldZoom(world, 1.05f);
+    entityZoom(&player->entity, 1.05f);
+  }
+}
+
 int main() {
 
   Randerer randerer = randererInit("2DframeworkTest", (int[]){800, 600});
   randererSetAutoFrameResizingKeepRatio(&randerer);
 
   World world = createWorld(createBackground("background.png", GL_RGBA, 0.0f, 0.2f, 0.2f, 0.0f, BG_REPEAT),
-                            1024, (int[2]){0, 4}, (float[2]){0.0f, 0.1f}, 0.1f);
+                            1024, (int[2]){0, 3}, (float[2]){0.0f, 0.1f}, 0.1f);
   
   groundAdd(&world.ground, "brick.png", GL_RGBA, GO_SQUARE,  1.0f,  -0.6f, 0.1f, 0.1f, 0.0f);
   groundAdd(&world.ground, "brick.png", GL_RGBA, GO_SQUARE, -1.0f,  2.0f, 0.1f, 0.1f, 0.0f);
@@ -37,8 +49,7 @@ int main() {
     
     playerDraw(&player);
     playerGetUserMovement(&player, &randerer, &world);
-    // worldZoom(&world, 1.001f);
-    // entityZoom(&player.entity, 1.001);
+    getZoomControl(&player, &world, &randerer);
     randererSwapBuffers(&randerer);
   }
   worldDelete(&world);

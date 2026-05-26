@@ -1,10 +1,10 @@
 cmake_minimum_required(VERSION 3.14)
-project(test)
+project(2DframeworkShowcase)
 
 find_package(glfw3 REQUIRED)
 find_package(OpenGL REQUIRED)
 
-add_executable(test libTest.c)
+add_executable(2DframeworkShowcase libTest.c)
 
 
 set(EMBED_SHADERS  ON  CACHE BOOL "" FORCE)
@@ -13,4 +13,4 @@ set(TEXTURE_EXTENSIONS "png;jpg"   CACHE STRING "" FORCE)
 
 add_subdirectory(2Dframework)
 
-target_link_libraries(test PRIVATE 2Dframework randerer glad glfw OpenGL::GL m stb)
+target_link_libraries(2DframeworkShowcase PRIVATE 2Dframework randerer glad glfw OpenGL::GL m stb)

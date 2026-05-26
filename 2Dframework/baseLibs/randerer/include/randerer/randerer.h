@@ -21,6 +21,8 @@ typedef struct {
 
 Randerer randererInit(const char* windowTitle, int windowDimensions[2]);
 void randererClose(Randerer* randerer);
+float randererGetDeltaTime(Randerer* randerer);
+
 int inline randererShouldClose(Randerer* randerer) {
   return windowShouldclose(&randerer->window);
 }
@@ -37,7 +39,6 @@ static void inline randererSetAutoFrameResizingKeepRatio(Randerer* randerer) {
   windowSetAutoFrameResizingKeepRatio(&randerer->window);
 }
 
-float randererGetDeltaTime(Randerer* randerer);
 
 Sprite createSprite(Mesh* mesh, Shader* shader, Texture* texture);
 void spriteDraw(Sprite* sprite);
