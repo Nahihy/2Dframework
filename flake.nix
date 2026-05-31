@@ -23,17 +23,32 @@
         (inputs.import-tree ./flakeAssets/nvim)
       ];
     };
-  in {
-    devShells.x86_64-linux.default = pkgs.mkShell {
-      packages = shellPkgs ++ [ neovim.neovim ];
 
-      shellHook = ''
+    fhsEnv = pkgs.buildFHSEnv {
+      name = "fhsShell";
+      targetPkgs = pkgs: [ 
+        pkgs.clang
+        pkgs.clang-tools
+        pkgs.cmake
+        pkgs.libGL
+        pkgs.wayland-scanner
+        neovim.neovim
+      ];
+
+      profile = ''     
         PS1='\[\e[38;5;141;1m\][\[\e[38;5;111m\]dev-shell\[\e[38;5;112m\]@\[\e[38;5;111m\]nvim\[\e[38;5;112m\]:\[\e[38;5;219m\]\w\[\e[38;5;141m\]]\[\e[38;5;177m\]\\$\[\e[0m\] '
-
-        echo 'This dev shell comes with custom neovim install. to use it run "nvim"' 
+        echo 'This dev shell comes with custom neovim install. To use it run "nvim"'
       '';
+
+      runScript = "bash";
+    };
+
+  in {
+
+
+
+    devShells.x86_64-linux.default = fhsEnv.env;
 
 
     };
-  };
 }

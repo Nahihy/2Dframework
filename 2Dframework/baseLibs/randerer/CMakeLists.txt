@@ -24,7 +24,6 @@ add_library(randerer STATIC
   src/texture.c
 )
 
-find_package(glfw3 REQUIRED)
 find_package(OpenGL REQUIRED)
 
 set(CGLM_SHARED OFF CACHE BOOL "" FORCE)
@@ -34,6 +33,9 @@ add_subdirectory(baseLibs/cglm)
 add_subdirectory(baseLibs/glad)
 add_subdirectory(baseLibs/stb)
 
+if(NOT TARGET glfw)
+  add_subdirectory(baseLibs/glfw)
+endif()
 target_include_directories(randerer PUBLIC include)
 target_link_libraries(randerer PUBLIC glfw glad stb OpenGL::GL cglm m)
 
