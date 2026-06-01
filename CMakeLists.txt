@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 3.14)
 project(2DframeworkShowcase)
 
-find_package(glfw3 REQUIRED)
 find_package(OpenGL REQUIRED)
 
 add_executable(2DframeworkShowcase libTest.c)

@@ -6,7 +6,8 @@ Randerer randererInit(const char *windowTitle, int windowDimensions[2]) {
   Randerer randerer;
   randerer.lastFrame = 0.0f;
 
-  glfwInit();
+  if(!glfwInit())
+    printf("Failed to initialize GLFW\n");
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
