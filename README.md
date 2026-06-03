@@ -3,7 +3,7 @@ It's a lib to easily create 2D graphical games, based on a randerer lib to make 
 The three of them are made with only c and cmake and those are the tools needed to compile it.
 The master branch is for unix/unix-like systems (linux/bsd/macos) and windows branch for windows.
 
-
+On windows there's a bug that doesn't happen consistenly for me where the textures aren't getting copied to where the executable exists and instead to the build dir's root, so if no textures are getting detected that's probably why.
 
 usage:
 to compile and use the library all you need is a c compiler and cmake.
