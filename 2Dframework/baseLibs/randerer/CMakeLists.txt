@@ -125,4 +125,6 @@ else()
 endif()
 
 add_custom_target(copy-texture-dir ALL
-  COMMAND ${CMAKE_COMMAND} -E copy_directory ${TEXTURE_SEARCH_DIR} ${CMAKE_BINARY_DIR}/textures)
+  COMMAND ${CMAKE_COMMAND} -E copy_directory ${TEXTURE_SEARCH_DIR} ${CMAKE_BINARY_DIR}/textures
+)
+add_dependencies(randerer copy-texture-dir)
