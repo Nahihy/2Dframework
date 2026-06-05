@@ -118,7 +118,7 @@ int databaseGetInt(Database* database, const char* varName) {
   return atoi(stringBuffer);
 }
 float databaseGetFloat(Database* database, const char* varName) {
-  char* stringBuffer;
+  char stringBuffer[DB_MAX_LINE_SIZE];
   databaseGetString(database, stringBuffer, varName);
   return (float)atof(stringBuffer);
 }
@@ -134,7 +134,7 @@ void databaseGetString(Database* database, char* outputBuffer, const char* varNa
   databaseClose(database);
 }
 char databaseGetChar(Database* database, const char* varName) {
-  char* stringBuffer;
+  char stringBuffer[DB_MAX_LINE_SIZE];
   databaseGetString(database, stringBuffer, varName);
   return stringBuffer[0];
 }

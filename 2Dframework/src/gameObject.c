@@ -56,8 +56,8 @@ void gameObjectResize(GameObject* object, float horizontal, float vertical) {
 }
 
 void gameObjectSetSize(GameObject* object, float height, float width) {
-  object->width = height;
-  object->height = width;
+  object->width = width;
+  object->height = height;
   gameObjectUpdate(object); 
 }
 
