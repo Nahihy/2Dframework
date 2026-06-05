@@ -1,3 +1,5 @@
+#include "2Dframework/entity.h"
+#include "2Dframework/gameObject.h"
 #include <2Dframework/player.h>
 
 Player createPlayer(const char* image, int colorType, int animationDelay, float maxVelocity, float accelaration, float jumpPower, float modelSize[2],
@@ -43,8 +45,8 @@ void playerGetUserMovement(Player* player, Randerer* randerer, World* world) {
   int spacePressed = glfwGetKey(randerer->window.GLFWwindow, GLFW_KEY_SPACE) == GLFW_PRESS;
   int dPressed = glfwGetKey(randerer->window.GLFWwindow, GLFW_KEY_D) == GLFW_PRESS;
   int aPressed = glfwGetKey(randerer->window.GLFWwindow, GLFW_KEY_A) == GLFW_PRESS;
-  
-  entityUpdateMovement(&player->entity, 0.0f, 0.0f, world);
+
+  float totalHoriMovement = 0.0f;
   
   worldMove(world, 
           (player->entity.obj.xCoord >  0.6f ? -(player->entity.obj.xCoord - 0.6f) : 0.0f) +
@@ -58,6 +60,7 @@ void playerGetUserMovement(Player* player, Randerer* randerer, World* world) {
           (player->entity.obj.yCoord >  0.6f ?  0.6f : player->entity.obj.yCoord < -0.6f ? -0.6f : player->entity.obj.yCoord)
   );
   if(!spacePressed && !dPressed && !aPressed) {
+    entityUpdateMovement(&player->entity, totalHoriMovement, 0.0f, world);
     entityChangeTexColumn(&player->entity, STAND_ANIM);
     player->delayToNextTex = player->animationDelay;
     return;
@@ -70,21 +73,24 @@ void playerGetUserMovement(Player* player, Randerer* randerer, World* world) {
   }
   else player->delayToNextTex--;
 
-  if(spacePressed && player->entity.isOnGround) {
-    entityJump(&player->entity, world);
-    if(player->entity.model.currModelColumn != JUMP_ANIM) 
-      entityChangeTexColumn(&player->entity, JUMP_ANIM);
+  if(spacePressed) {
+    if(player->entity.isOnGround) {
+      entityJump(&player->entity, world);
+      if(player->entity.model.currModelColumn != JUMP_ANIM) 
+        entityChangeTexColumn(&player->entity, JUMP_ANIM);
+    }
   }  
   if(dPressed) {
-    entityUpdateMovement(&player->entity, 1.0f, 0.0f, world);
+    totalHoriMovement += 1.0f;
     if(player->entity.model.currModelColumn != WALK_ANIM) entityChangeTexColumn(&player->entity, WALK_ANIM);
     entitySwitchToSide(&player->entity, RIGHT);
   }
   if(aPressed) {
-    entityUpdateMovement(&player->entity, -1.0f, 0.0f, world);
+    totalHoriMovement -= 1.0f;
     if(player->entity.model.currModelColumn != WALK_ANIM) entityChangeTexColumn(&player->entity, WALK_ANIM);
     entitySwitchToSide(&player->entity, LEFT);
   }
+  entityUpdateMovement(&player->entity, totalHoriMovement, 0.0f, world);
 }
 
 
