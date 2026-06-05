@@ -8,7 +8,7 @@ On windows there's a bug that doesn't happen consistenly for me where the textur
 usage:
 to compile and use the library all you need is a c compiler and cmake.
 
-cmake can be installed from the website cmake.org, and for the compiler you can use gcc clang or msvc.
+cmake can be installed from the website cmake.org, and for the compiler you can use gcc clang or msvc etc.
 to edit in vscode you can install the cmake tools extension and it should work.
 to edit in visual studio use the visual studio installer app, click on modify and inside the c++ desktop development section check the c++ cmake tools.
 
