@@ -25,6 +25,7 @@ Player createPlayer(const char* image, int colorType, int animationDelay, float 
   player.entity.currJumpAccel = 0.0f;
   player.entity.jumpPower = jumpPower;
   player.entity.collisionStep = 0.1f;
+  player.entity.isOnGround = 0;
 
   player.entity.obj = createGameObject(image, colorType, GL_MIRRORED_REPEAT, createEntityMesh(player.entity.model.modelsize),  xCoord, yCoord, width, height, 0.0f);
   entityUpdateTex(&player.entity);
@@ -60,7 +61,7 @@ void playerGetUserMovement(Player* player, Randerer* randerer, World* world) {
           (player->entity.obj.yCoord >  0.6f ?  0.6f : player->entity.obj.yCoord < -0.6f ? -0.6f : player->entity.obj.yCoord)
   );
   if(!spacePressed && !dPressed && !aPressed) {
-    entityUpdateMovement(&player->entity, totalHoriMovement, 0.0f, world);
+    entityUpdateMovement(&player->entity, 0.0f, 0.0f, world);
     entityChangeTexColumn(&player->entity, STAND_ANIM);
     player->delayToNextTex = player->animationDelay;
     return;
