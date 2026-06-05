@@ -41,6 +41,9 @@ typedef struct {
   int delayToNextTex;
   float jumpPower;
   float collisionStep;
+  float baseCollisionStep;
+  float xWorldCoord;
+  float yWorldCoord;
 } Entity;
 
 
@@ -55,6 +58,7 @@ void entityNextTex(Entity* entity);
 void entityUpdateTex(Entity* entity);
 void entityUpdateMovement(Entity* entity, float horiMovement, float vertMovement, World* world);
 void entitySwitchToSide(Entity* entity, Direction side);
-void entityZoom(Entity* entity, float mult);
+void entityZoom(Entity* entity, float level);
+void entitySetScale(Entity* entity, float scale);
 void entityJump(Entity* entity, World* world);
 Mesh createEntityMesh(float texCoord[2]);

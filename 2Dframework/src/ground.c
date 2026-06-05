@@ -51,9 +51,12 @@ void groundMove(Ground* ground, float horizontal, float vertical) {
     gameObjectMove(&ground->objArray[i], horizontal, vertical);
 }
 
-void groundZoom(Ground* ground, float mult) {
-  for(int i = 0; i < ground->objCount; i++) {
-    gameObjectSetLocation(&ground->objArray[i], ground->objArray[i].xCoord * mult, ground->objArray[i].yCoord * mult);
-    gameObjectSetSize(&ground->objArray[i], ground->objArray[i].height * mult, ground->objArray[i].width * mult);
-  }
+void groundZoom(Ground* ground, float level) {
+  for(int i = 0; i < ground->objCount; i++)
+    gameObjectZoom(&ground->objArray[i], level);
+}
+
+void groundSetScale(Ground* ground, float scale) {
+  for(int i = 0; i < ground->objCount; i++)
+    gameObjectSetScale(&ground->objArray[i], scale);
 }

@@ -14,4 +14,5 @@ World createWorld(Background bg, int initGroundCount, int gravityLevel[2], float
 void worldDelete(World* world);
 void worldDraw(World* world);
 void worldMove(World* world, float horizontal, float vertical);
-void worldZoom(World* world, float mult);
+void worldZoom(World* world, float level);
+void worldSetScale(World* world, float scale);

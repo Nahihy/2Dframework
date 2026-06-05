@@ -11,6 +11,9 @@ typedef struct {
   float width, height;
   float rotation;
   float horiTexOffset, vertTexOffset;
+  float scale;
+  float baseWidth, baseHeight;
+  float baseXCoord, baseYCoord;
 } GameObject;
 
 GameObject createGameObject(const char* image, int colorType, int texWrap, Mesh mesh,
@@ -27,3 +30,5 @@ void gameObjectUpdateTex(GameObject* object);
 void gameObjectUpdate(GameObject* object);
 int gameObjectCheckCollision(GameObject* object1, GameObject* object2);
 void gameObjectSetLocation(GameObject* object, float xCoord, float yCoord);
+void gameObjectSetScale(GameObject* object, float scale);
+void gameObjectZoom(GameObject* object, float level);

@@ -31,7 +31,11 @@ void worldMove(World* world, float horizontal, float vertical) {
   groundMove(&world->ground, horizontal, vertical);
 }
 
-void worldZoom(World* world, float mult) {
-  backgroundZoom(&world->bg, mult);
-  groundZoom(&world->ground, mult);
+void worldZoom(World* world, float level) {
+  backgroundZoom(&world->bg, level);
+  groundZoom(&world->ground, level);
+}
+
+void worldSetScale(World* world, float scale) {
+
 }

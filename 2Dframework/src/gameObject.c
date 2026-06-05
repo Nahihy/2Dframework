@@ -8,6 +8,11 @@ GameObject createGameObject(const char* image, int colorType, int texWrap, Mesh 
   object.width = width;
   object.height = height;
   object.rotation = rotation;
+  object.scale = 1.0f;
+  object.baseWidth = width;
+  object.baseHeight = height;
+  object.baseXCoord = xCoord;
+  object.baseYCoord = yCoord;
   object.horiTexOffset = 0.0f;
   object.vertTexOffset = 0.0f;
   
@@ -38,26 +43,34 @@ void gameObjectDelete(GameObject* object) {
 }
 
 void gameObjectMove(GameObject* object, float horizontal, float vertical) {
-  object->xCoord += horizontal;
-  object->yCoord += vertical;
+  object->baseXCoord += horizontal;
+  object->baseYCoord += vertical;
+  object->xCoord = object->baseXCoord * object->scale;
+  object->yCoord = object->baseYCoord * object->scale;
   gameObjectUpdate(object);
 }
 
 void gameObjectSetLocation(GameObject* object, float xCoord, float yCoord) {
-  object->xCoord = xCoord;
-  object->yCoord = yCoord;
+  object->baseXCoord = xCoord;
+  object->baseYCoord = yCoord;
+  object->xCoord = object->baseXCoord * object->scale;
+  object->yCoord = object->baseYCoord * object->scale;  
   gameObjectUpdate(object);
 }
 
 void gameObjectResize(GameObject* object, float horizontal, float vertical) {
-  object->width += horizontal;
-  object->height += vertical;
+  object->baseWidth += horizontal;
+  object->baseHeight += vertical;
+  object->width = object->baseWidth * object->scale;
+  object->height = object->baseHeight * object->scale;
   gameObjectUpdate(object);
 }
 
 void gameObjectSetSize(GameObject* object, float height, float width) {
-  object->width = width;
-  object->height = height;
+  object->baseWidth = width;
+  object->baseHeight = height;
+  object->width = object->baseWidth * object->scale;
+  object->height = object->baseHeight * object->scale;  
   gameObjectUpdate(object); 
 }
 
@@ -105,4 +118,22 @@ int gameObjectCheckCollision(GameObject* object1, GameObject* object2) {
   return 
     one_right >= two_left && two_right >= one_left &&
     one_top >= two_bottom && two_top >= one_bottom;
+}
+
+void gameObjectSetScale(GameObject* object, float scale) {
+  object->scale = scale;
+  object->width = object->baseWidth * object->scale;
+  object->height = object->baseHeight * object->scale;
+  object->xCoord = object->baseXCoord * object->scale;
+  object->yCoord = object->baseYCoord * object->scale;
+  gameObjectUpdate(object);
+}
+void gameObjectZoom(GameObject* object, float level) {
+  object->scale += level;
+  if(object->scale < 0.0f) object->scale -= level;
+  object->width = object->baseWidth * object->scale;
+  object->height = object->baseHeight * object->scale;
+  object->xCoord = object->baseXCoord * object->scale;
+  object->yCoord = object->baseYCoord * object->scale;
+  gameObjectUpdate(object);
 }

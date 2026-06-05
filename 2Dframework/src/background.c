@@ -4,11 +4,11 @@
 Background createBackground(const char* image, int colorType, float left, float right, float up, float down, int bgMode) {
   Background background;
   glm_vec2((vec2){0.0f, 0.0f}, background.texOffset);
-  background.texZoom = 1.0f;
+  background.scale = 1.0f;
   Shader shader = createShader("background/vertex.glsl", "background/fragment.glsl");
   shaderSetVec2(&shader, "texOffset", background.texOffset);
   shaderSetInt(&shader, "tex", 0);
-  shaderSetFloat(&shader, "texZoom", background.texZoom);
+  shaderSetFloat(&shader, "texZoom", background.scale);
   float vertices[16] = {
    -1.0f, 1.0f,   left, up,
     1.0f, 1.0f,   right, up,
@@ -51,13 +51,18 @@ void backgroundDelete(Background* background) {
 }
 
 void backgroundMove(Background* background, float horizontal, float vertical) {
-  background->texOffset[0] += horizontal;
-  background->texOffset[1] += vertical;
+  background->texOffset[0] += horizontal * background->scale;
+  background->texOffset[1] += vertical * background->scale;
   shaderSetVec2(&background->sprite.shader, "texOffset", background->texOffset);
 }
 
-void backgroundZoom(Background* background, float mult) {
-  background->texZoom *= mult;
-  shaderSetFloat(&background->sprite.shader, "texZoom", background->texZoom);
+void backgroundZoom(Background* background, float level) {
+  background->scale += level;
+  if(background->scale < 0.0f) background->scale -= level;
+  shaderSetFloat(&background->sprite.shader, "texZoom", background->scale);
 }
 
+void backgroundSetScale(Background* background, float scale) {
+  background->scale = scale;
+  shaderSetFloat(&background->sprite.shader, "texZoom", background->scale);
+}

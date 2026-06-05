@@ -38,9 +38,12 @@ Entity createEntity(const char* image, int colorType, ModelAttrib* model, int ig
   entity.isOnGround = 0;
   entity.currJumpAccel = 0.0f;
   entity.jumpPower = jumpPower;
+  entity.xWorldCoord = xCoord;
+  entity.yWorldCoord = yCoord;
+  entity.baseCollisionStep = 0.1f;
+  entity.collisionStep = 0.1f;
   entity.obj = createGameObject(image, colorType, GL_MIRRORED_REPEAT, createEntityMesh(entity.model.modelsize),
                                 xCoord, yCoord, width, height, 0.0f);
-  entity.collisionStep = 0.1f;
   entityUpdateTex(&entity);
   return entity;
 }
@@ -63,16 +66,20 @@ void entityUpdateMovement(Entity* entity, float horiMovement, float vertMovement
 
   if(entity->currHoriVelocity > entity->maxVelocity) totalHoriMovement -= entity->accelaration;
   else if(entity->currHoriVelocity < -entity->maxVelocity) totalHoriMovement += entity->accelaration;
-
+  
+  entity->xWorldCoord += entity->currHoriVelocity + totalHoriMovement;
   gameObjectMove(&entity->obj, entity->currHoriVelocity + totalHoriMovement, 0);
   if (entity->ignoreCollision == EN_USE_COLLISION && groundCheckCollision(&world->ground, &entity->obj)) {
+    entity->xWorldCoord -= entity->currHoriVelocity + totalHoriMovement;
     gameObjectMove(&entity->obj, -(entity->currHoriVelocity + totalHoriMovement), 0);
     entity->currHoriVelocity = 0.0f;
     float dir = (totalHoriMovement > 0.0f) ? entity->collisionStep : -entity->collisionStep;
     totalHoriMovement = 0.0f;
     while (!groundCheckCollision(&world->ground, &entity->obj)) {
+      entity->xWorldCoord += dir;
       gameObjectMove(&entity->obj, dir, 0);
     }
+    entity->xWorldCoord -= dir;
     gameObjectMove(&entity->obj, -dir, 0);
   }  
 
@@ -95,8 +102,10 @@ void entityUpdateMovement(Entity* entity, float horiMovement, float vertMovement
   if(entity->currVertVelocity > entity->maxVelocity) totalVertMovement -= entity->accelaration;
   else if(entity->currVertVelocity < -entity->maxVelocity) totalVertMovement += entity->accelaration;
 
+  entity->yWorldCoord += entity->currVertVelocity + totalVertMovement;
   gameObjectMove(&entity->obj, 0, entity->currVertVelocity + totalVertMovement);
   if (entity->ignoreCollision == EN_USE_COLLISION && groundCheckCollision(&world->ground, &entity->obj)) {
+    entity->yWorldCoord -= entity->currVertVelocity + totalVertMovement;
     gameObjectMove(&entity->obj, 0, -(entity->currVertVelocity + totalVertMovement));
     entity->currVertVelocity = 0.0f;
     if (entity->currVertVelocity + totalVertMovement < 0.0f)
@@ -104,8 +113,10 @@ void entityUpdateMovement(Entity* entity, float horiMovement, float vertMovement
     float dir = (totalVertMovement > 0.0f) ? entity->collisionStep : -entity->collisionStep;
     totalVertMovement = 0.0f;
     while (!groundCheckCollision(&world->ground, &entity->obj)) {
+      entity->yWorldCoord += dir;
       gameObjectMove(&entity->obj, 0, dir);
     }
+    entity->yWorldCoord -= dir;
     gameObjectMove(&entity->obj, 0, -dir);
   }  else entity->isOnGround = 0;
 
@@ -128,15 +139,16 @@ void entityResize(Entity* entity, float horizontal, float vertical) {
   gameObjectResize(&entity->obj, horizontal, vertical);
 }
 
-void entityZoom(Entity* entity, float mult) {
-  gameObjectSetSize(&entity->obj, entity->obj.height * mult, entity->obj.width * mult);
-  gameObjectSetLocation(&entity->obj, entity->obj.xCoord * mult, entity->obj.yCoord * mult);
-  entity->maxVelocity *= mult;
-  entity->accelaration *= mult;
-  entity->currJumpAccel *= mult;
-  entity->jumpPower *= mult;
-  entity->collisionStep *= mult;
+void entityZoom(Entity* entity, float level) {
+  gameObjectZoom(&entity->obj, level);
+  entity->collisionStep = entity->baseCollisionStep * entity->obj.scale;
 }
+
+void entitySetScale(Entity* entity, float scale) {
+  gameObjectSetScale(&entity->obj, scale);
+  entity->collisionStep = entity->baseCollisionStep * entity->obj.scale;
+}
+
 void entityNextTex(Entity* entity) {
   entity->model.currModel++;
   TexColumn* currColumn = &(entity->model.modelColumns[entity->model.currModelColumn]);

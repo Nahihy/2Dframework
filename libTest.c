@@ -1,14 +1,13 @@
 #include <2Dframework/2Dframework.h>
 
-
 void getZoomControl(Player* player, World* world, Randerer* randerer) {
   if(glfwGetKey(randerer->window.GLFWwindow, GLFW_KEY_MINUS) == GLFW_PRESS) {
-    worldZoom(world, 0.95f);
-    entityZoom(&player->entity, 0.95f);
+    worldZoom(world, -0.05f);
+    entityZoom(&player->entity, -0.05f);
   }
   if(glfwGetKey(randerer->window.GLFWwindow, GLFW_KEY_EQUAL) == GLFW_PRESS) {
-    worldZoom(world, 1.05f);
-    entityZoom(&player->entity, 1.05f);
+    worldZoom(world, 0.05f);
+    entityZoom(&player->entity, 0.05f);
   }
 }
 
@@ -51,6 +50,7 @@ int main() {
     playerDraw(&player);
     playerGetUserMovement(&player, &randerer, &world);
     getZoomControl(&player, &world, &randerer);
+
     randererSwapBuffers(&randerer);
   }
   worldDelete(&world);

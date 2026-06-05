@@ -19,4 +19,5 @@ void groundAddToSlot(Ground* ground, int slot);
 void groundDraw(Ground* ground);
 int groundCheckCollision(Ground* ground, GameObject* object);
 void groundMove(Ground* ground, float horizontal, float vertical);
-void groundZoom(Ground* ground, float mult);
+void groundZoom(Ground* ground, float level);
+void groundSetScale(Ground* ground, float scale);

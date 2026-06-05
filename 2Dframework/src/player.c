@@ -1,5 +1,3 @@
-#include "2Dframework/entity.h"
-#include "2Dframework/gameObject.h"
 #include <2Dframework/player.h>
 
 Player createPlayer(const char* image, int colorType, int animationDelay, float maxVelocity, float accelaration, float jumpPower, float modelSize[2],
@@ -25,6 +23,7 @@ Player createPlayer(const char* image, int colorType, int animationDelay, float 
   player.entity.currJumpAccel = 0.0f;
   player.entity.jumpPower = jumpPower;
   player.entity.collisionStep = 0.1f;
+  player.entity.baseCollisionStep = 0.1f;
   player.entity.isOnGround = 0;
 
   player.entity.obj = createGameObject(image, colorType, GL_MIRRORED_REPEAT, createEntityMesh(player.entity.model.modelsize),  xCoord, yCoord, width, height, 0.0f);
@@ -49,17 +48,22 @@ void playerGetUserMovement(Player* player, Randerer* randerer, World* world) {
 
   float totalHoriMovement = 0.0f;
   
+  float scale = player->entity.obj.scale;
+  float xCoord = player->entity.obj.xCoord;
+  float yCoord = player->entity.obj.yCoord;
+
   worldMove(world, 
-          (player->entity.obj.xCoord >  0.6f ? -(player->entity.obj.xCoord - 0.6f) : 0.0f) +
-          (player->entity.obj.xCoord < -0.6f ? -(player->entity.obj.xCoord + 0.6f) : 0.0f),
-          (player->entity.obj.yCoord >  0.6f ? -(player->entity.obj.yCoord - 0.6f) : 0.0f) +
-          (player->entity.obj.yCoord < -0.6f ? -(player->entity.obj.yCoord + 0.6f) : 0.0f)
+          (xCoord >  0.6f ? -(xCoord - 0.6f) / scale : 0.0f) +
+          (xCoord < -0.6f ? -(xCoord + 0.6f) / scale : 0.0f),
+          (yCoord >  0.6f ? -(yCoord - 0.6f) /scale : 0.0f) +
+          (yCoord < -0.6f ? -(yCoord + 0.6f) / scale : 0.0f)
   );
 
   gameObjectSetLocation(&player->entity.obj, 
-          (player->entity.obj.xCoord >  0.6f ?  0.6f : player->entity.obj.xCoord < -0.6f ? -0.6f : player->entity.obj.xCoord),
-          (player->entity.obj.yCoord >  0.6f ?  0.6f : player->entity.obj.yCoord < -0.6f ? -0.6f : player->entity.obj.yCoord)
+          (xCoord >  0.6f ?  0.6f / scale : xCoord < -0.6f ? -0.6f / scale : player->entity.obj.baseXCoord),
+          (yCoord >  0.6f ?  0.6f / scale : yCoord < -0.6f ? -0.6f / scale : player->entity.obj.baseYCoord)
   );
+
   if(!spacePressed && !dPressed && !aPressed) {
     entityUpdateMovement(&player->entity, 0.0f, 0.0f, world);
     entityChangeTexColumn(&player->entity, STAND_ANIM);
