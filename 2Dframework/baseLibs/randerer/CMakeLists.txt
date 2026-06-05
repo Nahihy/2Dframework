@@ -16,7 +16,6 @@ if(NOT DEFINED TEXTURE_DIR)
 endif()
 
 add_library(randerer STATIC
-  src/camera.c
   src/shader.c
   src/window.c
   src/mesh.c

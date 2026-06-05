@@ -9,7 +9,6 @@ add_subdirectory(baseLibs/database)
 add_library(2Dframework STATIC
   src/background.c
   src/gameObject.c
-  src/ground.c
   src/entity.c
   src/player.c
   src/ground.c
