@@ -1,8 +1,7 @@
-#include "2Dframework/background.h"
-#include "2Dframework/ground.h"
 #include <2Dframework/world.h>
 
-World createWorld(Background bg, int initGroundCount, int gravityLevel[2], float playerSpawn[2], float bgMoveWithGround) {
+World createWorld(Background bg, int initGroundCount, int gravityLevel[2],
+                  float playerSpawn[2], float bgMovementWithGround, float border[4]) {
   World world;
   world.bg = bg;
   world.ground = createGround(initGroundCount);
@@ -10,7 +9,13 @@ World createWorld(Background bg, int initGroundCount, int gravityLevel[2], float
   world.gravityLevel[1] = gravityLevel[1];
   world.playerSpawn[0] = playerSpawn[0];
   world.playerSpawn[1] = playerSpawn[1];
-  world.bgMoveWithGround = bgMoveWithGround;
+  world.basePlayerSpawn[0] = playerSpawn[0];
+  world.basePlayerSpawn[1] = playerSpawn[1];
+  world.bgMovementWithGround = bgMovementWithGround;
+  world.border[0] = border[0];
+  world.border[1] = border[1];
+  world.border[2] = border[2];
+  world.border[3] = border[3];
 
   return world;
 }
@@ -27,8 +32,10 @@ void worldDraw(World* world) {
 } 
 
 void worldMove(World* world, float horizontal, float vertical) {
-  backgroundMove(&world->bg, -horizontal * world->bgMoveWithGround, -vertical * world->bgMoveWithGround);
+  backgroundMove(&world->bg, -horizontal * world->bgMovementWithGround, -vertical * world->bgMovementWithGround);
   groundMove(&world->ground, horizontal, vertical);
+  world->playerSpawn[0] += horizontal;
+  world->playerSpawn[1] += vertical;
 }
 
 void worldZoom(World* world, float level) {
@@ -37,5 +44,6 @@ void worldZoom(World* world, float level) {
 }
 
 void worldSetScale(World* world, float scale) {
-
+  backgroundSetScale(&world->bg, scale);
+  groundSetScale(&world->ground, scale);
 }

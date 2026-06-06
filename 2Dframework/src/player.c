@@ -55,7 +55,7 @@ void playerGetUserMovement(Player* player, Randerer* randerer, World* world) {
   worldMove(world, 
           (xCoord >  0.6f ? -(xCoord - 0.6f) / scale : 0.0f) +
           (xCoord < -0.6f ? -(xCoord + 0.6f) / scale : 0.0f),
-          (yCoord >  0.6f ? -(yCoord - 0.6f) /scale : 0.0f) +
+          (yCoord >  0.6f ? -(yCoord - 0.6f) / scale : 0.0f) +
           (yCoord < -0.6f ? -(yCoord + 0.6f) / scale : 0.0f)
   );
 
@@ -63,6 +63,11 @@ void playerGetUserMovement(Player* player, Randerer* randerer, World* world) {
           (xCoord >  0.6f ?  0.6f / scale : xCoord < -0.6f ? -0.6f / scale : player->entity.obj.baseXCoord),
           (yCoord >  0.6f ?  0.6f / scale : yCoord < -0.6f ? -0.6f / scale : player->entity.obj.baseYCoord)
   );
+
+  if(player->entity.xWorldCoord < world->border[0] ||
+     player->entity.xWorldCoord > world->border[1] ||
+     player->entity.yWorldCoord > world->border[2] ||
+     player->entity.yWorldCoord < world->border[3]) playerSendPlayerToSpawn(player, world);
 
   if(!spacePressed && !dPressed && !aPressed) {
     entityUpdateMovement(&player->entity, 0.0f, 0.0f, world);
@@ -101,4 +106,6 @@ void playerGetUserMovement(Player* player, Randerer* randerer, World* world) {
 
 void playerSendPlayerToSpawn(Player* player, World* world) {
   gameObjectSetLocation(&player->entity.obj, world->playerSpawn[0], world->playerSpawn[1]);
+  player->entity.xWorldCoord = world->basePlayerSpawn[0];
+  player->entity.yWorldCoord = world->basePlayerSpawn[1];
 }
