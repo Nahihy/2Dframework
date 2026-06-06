@@ -6,7 +6,7 @@
 Database createDatabase(const char* fileName) {
   Database database;
   database.fileName = fileName;
-
+  database.file = NULL;
   return database;
 }
 
@@ -15,7 +15,10 @@ void databaseOpen(Database* database, const char* mode) {
 }
 
 void databaseClose(Database* database) {
-  fclose(database->file);
+  if (database->file != NULL) {
+    fclose(database->file);
+    database->file = NULL;
+  }
 }
 
 void databaseDelete(Database* database) {
@@ -25,9 +28,10 @@ void databaseDelete(Database* database) {
 
 long databaseGetVarLocation(Database* database, const char* varName) {
   databaseOpen(database, "r"); 
+  if(database->file == NULL) return -1;
   char line[DB_MAX_LINE_SIZE];
   char extractedName[DB_MAX_LINE_SIZE];
-
+  extractedName[0] = '\0';
   while(fgets(line, sizeof(line), database->file)) {
     char formatStr[20];
     snprintf(formatStr, sizeof(formatStr), "%%%d[^=]", (int)sizeof(extractedName) - 1);
@@ -39,6 +43,7 @@ long databaseGetVarLocation(Database* database, const char* varName) {
       databaseClose(database);
       return location;
     }
+    extractedName[0] = '\0';
   }
   printf("Warning: could not find var \"%s\" in database \"%s\"", varName, database->fileName);
   databaseClose(database);
@@ -75,7 +80,6 @@ void databaseRemoveVar(Database* database, const char* varName) {
   
   if (location == -1) 
     return;
-  
   
   FILE* temp = fopen("temp.txt", "w");
   if (temp == NULL) {
@@ -124,6 +128,10 @@ float databaseGetFloat(Database* database, const char* varName) {
 }
 void databaseGetString(Database* database, char* outputBuffer, const char* varName) {
   long lineLocation = databaseGetVarLocation(database, varName);
+  if(lineLocation == -1) {
+    outputBuffer[0] = '\n';
+    return;
+  }
   char line[512];
   databaseOpen(database, "r");
 

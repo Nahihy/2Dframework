@@ -2,7 +2,7 @@
 #include <stdio.h>
 
 #define DB_MAX_LINE_SIZE 256
-#define DB_FILE_COPY_BUFFER_SIZE 1028
+#define DB_FILE_COPY_BUFFER_SIZE 1024
 
 
 typedef struct {

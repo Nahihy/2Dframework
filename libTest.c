@@ -1,3 +1,4 @@
+#include "database/database.h"
 #include <2Dframework/2Dframework.h>
 #include <stdio.h>
 
@@ -35,6 +36,7 @@ int main() {
   Player player = createPlayer("mario.png", GL_RGBA, 20, 0.5f, 0.04f, 0.2f, (float[2]){0.3333f, 0.3333f},
                                (TexColumn){0, 1, EN_REPEAT}, (TexColumn){1, 3, EN_REPEAT},
                                (TexColumn){2, 1, EN_REPEAT}, 0.0f, 0.01f, 0.1f, 0.1);
+
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   glEnable(GL_BLEND);
 
@@ -47,8 +49,6 @@ int main() {
     playerDraw(&player);
     playerGetUserMovement(&player, &randerer, &world);
     getZoomControl(&player, &world, &randerer);
-
-    printf("(%f , %f)\n", player.entity.xWorldCoord, player.entity.yWorldCoord);
 
     randererSwapBuffers(&randerer);
   }
