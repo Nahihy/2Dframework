@@ -1,4 +1,6 @@
+#include "database/database.h"
 #include <2Dframework/player.h>
+#include <math.h>
 
 Player createPlayer(const char* image, int colorType, int animationDelay, float maxVelocity, float accelaration, float jumpPower, float modelSize[2],
                     TexColumn standAnim, TexColumn walkAnim, TexColumn jumpAnim, float xCoord, float yCoord, float width, float height) {
@@ -25,6 +27,7 @@ Player createPlayer(const char* image, int colorType, int animationDelay, float 
   player.entity.collisionStep = 0.1f;
   player.entity.baseCollisionStep = 0.1f;
   player.entity.isOnGround = 0;
+  player.savedData = createDatabase("player.dat");
 
   player.entity.obj = createGameObject(image, colorType, GL_MIRRORED_REPEAT, createEntityMesh(player.entity.model.modelsize),  xCoord, yCoord, width, height, 0.0f);
   entityUpdateTex(&player.entity);
@@ -108,4 +111,18 @@ void playerSendPlayerToSpawn(Player* player, World* world) {
   gameObjectSetLocation(&player->entity.obj, world->playerSpawn[0], world->playerSpawn[1]);
   player->entity.xWorldCoord = world->basePlayerSpawn[0];
   player->entity.yWorldCoord = world->basePlayerSpawn[1];
+}
+
+void playerSaveLocation(Player* player) {
+  databaseSetFloat(&player->savedData, "xWorldCoord", player->entity.xWorldCoord);
+  databaseSetFloat(&player->savedData, "yWorldCoord", player->entity.yWorldCoord);
+}
+
+void playerSendToLastSavedLocation(Player* player) {
+  float savedXCoord = databaseGetFloat(&player->savedData, "xWorldCoord");
+  float savedYCoord = databaseGetFloat(&player->savedData, "yWorldCoord");
+  if(isnan(savedXCoord) || isnan(savedYCoord)) return;
+  gameObjectSetLocation(&player->entity.obj, savedXCoord, savedYCoord);
+  player->entity.xWorldCoord = savedXCoord;
+  player->entity.yWorldCoord = savedYCoord; 
 }

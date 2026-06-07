@@ -1,6 +1,4 @@
-#include "database/database.h"
 #include <2Dframework/2Dframework.h>
-#include <stdio.h>
 
 void getZoomControl(Player* player, World* world, Randerer* randerer) {
   if(glfwGetKey(randerer->window.GLFWwindow, GLFW_KEY_MINUS) == GLFW_PRESS) {
@@ -41,6 +39,7 @@ int main() {
   glEnable(GL_BLEND);
 
   playerSendPlayerToSpawn(&player, &world);
+  playerSendToLastSavedLocation(&player);
   while(!randererShouldClose(&randerer)) {
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT);
@@ -49,6 +48,9 @@ int main() {
     playerDraw(&player);
     playerGetUserMovement(&player, &randerer, &world);
     getZoomControl(&player, &world, &randerer);
+
+    if(glfwGetKey(randerer.window.GLFWwindow, GLFW_KEY_S) == GLFW_PRESS) 
+      playerSaveLocation(&player);
 
     randererSwapBuffers(&randerer);
   }

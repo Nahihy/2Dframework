@@ -1,4 +1,5 @@
 #include <database/database.h>
+#include <math.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -119,11 +120,13 @@ void databaseRemoveVar(Database* database, const char* varName) {
 int databaseGetInt(Database* database, const char* varName) {
   char stringBuffer[DB_MAX_LINE_SIZE];
   databaseGetString(database, stringBuffer, varName);
+  if(stringBuffer[0] == '\n') return NAN;
   return atoi(stringBuffer);
 }
 float databaseGetFloat(Database* database, const char* varName) {
   char stringBuffer[DB_MAX_LINE_SIZE];
   databaseGetString(database, stringBuffer, varName);
+  if(stringBuffer[0] == '\n') return NAN;
   return (float)atof(stringBuffer);
 }
 void databaseGetString(Database* database, char* outputBuffer, const char* varName) {

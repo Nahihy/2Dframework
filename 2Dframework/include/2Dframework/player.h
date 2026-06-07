@@ -1,4 +1,5 @@
 #pragma once
+#include "database/database.h"
 #include <2Dframework/entity.h>
 #include <2Dframework/world.h>
 
@@ -12,6 +13,7 @@ typedef struct {
   TexColumn animations[TOTAL_ANIM_SIZE];
   int animationDelay;
   int delayToNextTex;
+  Database savedData;
 } Player;
 
 
@@ -22,3 +24,5 @@ void playerDelete(Player* player);
 void playerDraw(Player* player);
 void playerGetUserMovement(Player* player, Randerer* randerer, World* world);
 void playerSendPlayerToSpawn(Player* player, World* world);
+void playerSaveLocation(Player* player);
+void playerSendToLastSavedLocation(Player* player);
