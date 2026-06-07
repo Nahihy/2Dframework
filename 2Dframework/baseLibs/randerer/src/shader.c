@@ -11,7 +11,7 @@
 #endif
 
 static char* readFile(const char* path) {
-  FILE* file = fopen(path, "rb");
+  FILE* file = fopen(path, "r");
   if (!file) {
     perror("fopen error");
     printf("ERROR::SHADER::FILE_NOT_FOUND: %s\n", path);

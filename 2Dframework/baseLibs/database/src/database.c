@@ -1,18 +1,16 @@
 #include <database/database.h>
-#include <math.h>
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
 
-Database createDatabase(const char* fileName) {
+
+Database createDatabase(const char* fileName, DBtype type) {
   Database database;
   database.fileName = fileName;
   database.file = NULL;
+  database.type = type;
   return database;
 }
 
 void databaseOpen(Database* database, const char* mode) {
-  database->file = fopen(database->fileName, mode);
+  database->file = fopen(database->fileName, mode + database->type);
 }
 
 void databaseClose(Database* database) {
@@ -28,125 +26,59 @@ void databaseDelete(Database* database) {
 }
 
 long databaseGetVarLocation(Database* database, const char* varName) {
-  databaseOpen(database, "r"); 
-  if(database->file == NULL) return -1;
-  char line[DB_MAX_LINE_SIZE];
-  char extractedName[DB_MAX_LINE_SIZE];
-  extractedName[0] = '\0';
-  while(fgets(line, sizeof(line), database->file)) {
-    char formatStr[20];
-    snprintf(formatStr, sizeof(formatStr), "%%%d[^=]", (int)sizeof(extractedName) - 1);
-    sscanf(line, formatStr, extractedName);
-    
-    if(!strcmp(extractedName, varName)) {
-      fseek(database->file, -strlen(line), SEEK_CUR);
-      long location = ftell(database->file);
-      databaseClose(database);
-      return location;
-    }
-    extractedName[0] = '\0';
-  }
-  printf("Warning: could not find var \"%s\" in database \"%s\"", varName, database->fileName);
-  databaseClose(database);
-  return -1;
+  return database->type == TEXT ?
+  databaseGetVarLocationTEXT(database, varName) : databaseGetVarLocationBINARY(database, varName);
 }
 
 void databaseSetInt(Database* database, const char* varName, int value) {
-  databaseRemoveVar(database, varName);
-  databaseOpen(database, "a");
-  fprintf(database->file, "%s=%d\n", varName, value);
-  databaseClose(database);
+  if(database->type == TEXT)
+    databaseSetIntTEXT(database, varName, value);
+  else
+    databaseSetIntBINARY(database, varName, value);
 }
+
 void databaseSetFloat(Database* database, const char* varName, float value) {
-  databaseRemoveVar(database, varName);
-  databaseOpen(database, "a");
-  fprintf(database->file, "%s=%f\n", varName, value);
-  databaseClose(database);
+  if(database->type == TEXT)
+    databaseSetFloatTEXT(database, varName, value);
+  else
+    databaseSetFloatBINARY(database, varName, value);
 }
+
 void databaseSetString(Database* database, const char* varName, const char* value) {
-  databaseRemoveVar(database, varName);
-  databaseOpen(database, "a");
-  fprintf(database->file, "%s=%s\n", varName, value);
-  databaseClose(database);
+  if(database->type == TEXT)
+    databaseSetStringTEXT(database, varName, value);
+  else
+    databaseSetStringBINARY(database, varName, value);
 }
+
 void databaseSetChar(Database* database, const char* varName, char value) {
-  databaseRemoveVar(database, varName);
-  databaseOpen(database, "a");
-  fprintf(database->file, "%s=%c\n", varName, value);
-  databaseClose(database);
+  if(database->type == TEXT)
+    databaseSetCharTEXT(database, varName, value);
+  else
+    databaseSetCharBINARY(database, varName, value);
 }
 
 void databaseRemoveVar(Database* database, const char* varName) {
-  long location = databaseGetVarLocation(database, varName);
-  
-  if (location == -1) 
-    return;
-  
-  FILE* temp = fopen("temp.txt", "w");
-  if (temp == NULL) {
-    return;
-  }
-  
-  databaseOpen(database, "r");
-  
-  char buffer[DB_FILE_COPY_BUFFER_SIZE];
-  long bytesLeft = location;
-  
-  while (bytesLeft > 0) {
-    size_t chunkSize = (bytesLeft > sizeof(buffer)) ? sizeof(buffer) : bytesLeft;
-    size_t bytesRead = fread(buffer, 1, chunkSize, database->file);
-    
-    if (bytesRead == 0) break;
-    
-    fwrite(buffer, 1, bytesRead, temp);
-    bytesLeft -= bytesRead;
-  }
-  
-  char line[DB_MAX_LINE_SIZE];
-  fgets(line, sizeof(line), database->file);
-  
-  size_t bytesRead;
-  while ((bytesRead = fread(buffer, 1, sizeof(buffer), database->file)) > 0) {
-    fwrite(buffer, 1, bytesRead, temp);
-  }
-  
-  databaseClose(database);
-  fclose(temp);
-  
-  remove(database->fileName);
-  rename("temp.txt", database->fileName);
+  if(database->type == TEXT)
+    databaseRemoveVarTEXT(database, varName);
+  else
+    databaseRemoveVarBINARY(database, varName);
 }
 
 int databaseGetInt(Database* database, const char* varName) {
-  char stringBuffer[DB_MAX_LINE_SIZE];
-  databaseGetString(database, stringBuffer, varName);
-  if(stringBuffer[0] == '\n') return NAN;
-  return atoi(stringBuffer);
+  return database->type == TEXT ?
+    databaseGetIntTEXT(database, varName) : databaseGetIntBINARY(database, varName);
 }
+
 float databaseGetFloat(Database* database, const char* varName) {
-  char stringBuffer[DB_MAX_LINE_SIZE];
-  databaseGetString(database, stringBuffer, varName);
-  if(stringBuffer[0] == '\n') return NAN;
-  return (float)atof(stringBuffer);
+  return database->type == TEXT ?
+    databaseGetFloatTEXT(database, varName) : databaseGetFloatBINARY(database, varName);
 }
+
 void databaseGetString(Database* database, char* outputBuffer, const char* varName) {
-  long lineLocation = databaseGetVarLocation(database, varName);
-  if(lineLocation == -1) {
-    outputBuffer[0] = '\n';
-    return;
-  }
-  char line[512];
-  databaseOpen(database, "r");
-
-  fseek(database->file, lineLocation, SEEK_SET);
-  fgets(line, sizeof(line), database->file);
-  sscanf(line, "%*[^=]=%s\n", outputBuffer);
-
-  databaseClose(database);
-}
-char databaseGetChar(Database* database, const char* varName) {
-  char stringBuffer[DB_MAX_LINE_SIZE];
-  databaseGetString(database, stringBuffer, varName);
-  return stringBuffer[0];
+  if(database->type == TEXT)
+    databaseGetStringTEXT(database, outputBuffer, varName);
+  else
+    databaseGetStringBINARY(database, outputBuffer, varName);
 }
 
