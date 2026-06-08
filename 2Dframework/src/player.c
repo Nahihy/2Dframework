@@ -27,7 +27,7 @@ Player createPlayer(const char* image, int colorType, int animationDelay, float 
   player.entity.collisionStep = 0.1f;
   player.entity.baseCollisionStep = 0.1f;
   player.entity.isOnGround = 0;
-  player.savedData = createDatabase("player.dat", TEXT);
+  player.savedData = createDatabase("player.dat", BINARY);
 
   player.entity.obj = createGameObject(image, colorType, GL_MIRRORED_REPEAT, createEntityMesh(player.entity.model.modelsize),  xCoord, yCoord, width, height, 0.0f);
   entityUpdateTex(&player.entity);

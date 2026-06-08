@@ -1,9 +1,6 @@
 #pragma once
 #include <stdio.h>
 
-#define DB_MAX_LINE_SIZE 256
-#define DB_FILE_COPY_BUFFER_SIZE 1024
-
 typedef enum {
   BINARY = 'b',
   TEXT = '\0'
@@ -31,6 +28,8 @@ void databaseSetString(Database* database, const char* varName, const char* valu
 void databaseSetChar(Database* database, const char* varName, char value);
 void databaseRemoveVar(Database* database, const char* varName);
 
+#define DB_MAX_LINE_SIZE 256
+#define DB_FILE_COPY_BUFFER_SIZE 1024
 
 int databaseGetIntTEXT(Database* database, const char* varName);
 float databaseGetFloatTEXT(Database* database, const char* varName);
@@ -43,6 +42,8 @@ void databaseSetStringTEXT(Database* database, const char* varName, const char* 
 void databaseSetCharTEXT(Database* database, const char* varName, char value);
 void databaseRemoveVarTEXT(Database* database, const char* varName);
 
+#define DB_MAX_NAME_SIZE 32
+#define DB_MAX_STRING_SIZE 64
 
 int databaseGetIntBINARY(Database* database, const char* varName);
 float databaseGetFloatBINARY(Database* database, const char* varName);

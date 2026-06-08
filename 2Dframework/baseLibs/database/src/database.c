@@ -1,4 +1,5 @@
 #include <database/database.h>
+#include <stdio.h>
 
 
 Database createDatabase(const char* fileName, DBtype type) {
@@ -10,7 +11,9 @@ Database createDatabase(const char* fileName, DBtype type) {
 }
 
 void databaseOpen(Database* database, const char* mode) {
-  database->file = fopen(database->fileName, mode + database->type);
+  char finalMode[5];
+  sprintf(finalMode, "%s%c", mode, database->type);
+  database->file = fopen(database->fileName, finalMode);
 }
 
 void databaseClose(Database* database) {
