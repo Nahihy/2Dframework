@@ -1,4 +1,3 @@
-#include "database/database.h"
 #include <2Dframework/player.h>
 #include <math.h>
 
@@ -24,13 +23,13 @@ Player createPlayer(const char* image, int colorType, int animationDelay, float 
   player.entity.currVertVelocity = 0.0f;
   player.entity.currJumpAccel = 0.0f;
   player.entity.jumpPower = jumpPower;
-  player.entity.collisionStep = 0.1f;
-  player.entity.baseCollisionStep = 0.1f;
   player.entity.isOnGround = 0;
   player.savedData = createDatabase("player.dat", BINARY);
 
   player.entity.obj = createGameObject(image, colorType, GL_MIRRORED_REPEAT, createEntityMesh(player.entity.model.modelsize),  xCoord, yCoord, width, height, 0.0f);
-  entityUpdateTex(&player.entity);
+  entityUpdateTex(&player.entity);  
+  player.entity.baseCollisionStep = (player.entity.obj.width + player.entity.obj.height) / 20;
+  player.entity.collisionStep = player.entity.baseCollisionStep;
 
 
   return player;
@@ -88,7 +87,7 @@ void playerGetUserMovement(Player* player, Randerer* randerer, World* world) {
 
   if(spacePressed) {
     if(player->entity.isOnGround) {
-      entityJump(&player->entity, world);
+      entityJump(&player->entity, randerer, world);
       if(player->entity.model.currModelColumn != JUMP_ANIM) 
         entityChangeTexColumn(&player->entity, JUMP_ANIM);
     }
@@ -103,7 +102,7 @@ void playerGetUserMovement(Player* player, Randerer* randerer, World* world) {
     if(player->entity.model.currModelColumn != WALK_ANIM) entityChangeTexColumn(&player->entity, WALK_ANIM);
     entitySwitchToSide(&player->entity, LEFT);
   }
-  entityUpdateMovement(&player->entity, totalHoriMovement, 0.0f, world);
+  entityUpdateMovement(&player->entity, totalHoriMovement * randerer->deltaTime, 0.0f, world);
 }
 
 

@@ -40,11 +40,12 @@ Entity createEntity(const char* image, int colorType, ModelAttrib* model, int ig
   entity.jumpPower = jumpPower;
   entity.xWorldCoord = xCoord;
   entity.yWorldCoord = yCoord;
-  entity.baseCollisionStep = 0.1f;
-  entity.collisionStep = 0.1f;
+
   entity.obj = createGameObject(image, colorType, GL_MIRRORED_REPEAT, createEntityMesh(entity.model.modelsize),
                                 xCoord, yCoord, width, height, 0.0f);
   entityUpdateTex(&entity);
+  entity.baseCollisionStep = (entity.obj.width + entity.obj.height) / 20;
+  entity.collisionStep = entity.baseCollisionStep;
   return entity;
 }
 
@@ -183,8 +184,8 @@ void entitySwitchToSide(Entity* entity, Direction side) {
   entityUpdateTex(entity);
 }
 
-void entityJump(Entity* entity, World* world) {
-  entity->currJumpAccel = entity->jumpPower;
+void entityJump(Entity* entity, Randerer* randerer, World* world) {
+  entity->currJumpAccel = entity->jumpPower * randerer->deltaTime;
   entity->isOnGround = 0;
   entityUpdateMovement(entity, 0.0f, 0.0f, world);
 }

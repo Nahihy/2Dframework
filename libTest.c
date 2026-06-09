@@ -31,9 +31,9 @@ int main() {
       groundAdd(&world.ground, "brick.png", GL_RGBA, GO_SQUARE, 0.6f + 0.4f * i, 0.2f * j - 1.0f, 0.1f, 0.1f, 0.0f);
   
 
-  Player player = createPlayer("mario.png", GL_RGBA, 20, 0.5f, 0.04f, 0.2f, (float[2]){0.3333f, 0.3333f},
+  Player player = createPlayer("mario.png", GL_RGBA, 20, 10.0f, 2.5f, 15.2f, (float[2]){0.3333f, 0.3333f},
                                (TexColumn){0, 1, EN_REPEAT}, (TexColumn){1, 3, EN_REPEAT},
-                               (TexColumn){2, 1, EN_REPEAT}, 0.0f, 0.01f, 0.1f, 0.1);
+                               (TexColumn){2, 1, EN_REPEAT}, 0.0f, 0.01f, 0.095f, 0.095f);
 
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   glEnable(GL_BLEND);
@@ -43,6 +43,7 @@ int main() {
   while(!randererShouldClose(&randerer)) {
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT);
+    randererUpdateDeltaTime(&randerer);
     worldDraw(&world);
     
     playerDraw(&player);

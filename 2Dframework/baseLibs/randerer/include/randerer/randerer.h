@@ -16,19 +16,22 @@ typedef struct {
 
 typedef struct {
   float lastFrame;
+  float deltaTime;
   Window window;
 } Randerer;
 
 Randerer randererInit(const char* windowTitle, int windowDimensions[2]);
 void randererClose(Randerer* randerer);
-float randererGetDeltaTime(Randerer* randerer);
+void randererUpdateDeltaTime(Randerer* randerer);
 
 int inline randererShouldClose(Randerer* randerer) {
   return windowShouldclose(&randerer->window);
 }
+
 static void inline randererSwapBuffers(Randerer* randerer) {
   windowSwapBuffers(&randerer->window);
 }
+
 static void inline randererSetAutoFrameResizing(Randerer* randerer) {
   glfwSetWindowUserPointer(randerer->window.GLFWwindow, &randerer->window);
   windowSetAutoFrameResizing(&randerer->window);

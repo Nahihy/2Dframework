@@ -35,11 +35,10 @@ void randererClose(Randerer* randerer) {
   glfwTerminate();
 }
 
-float randererGetDeltaTime(Randerer* randerer) {
+void randererUpdateDeltaTime(Randerer* randerer) {
   float currentFrame = glfwGetTime();
-  float deltaTime = currentFrame - randerer->lastFrame;
+  randerer->deltaTime = currentFrame - randerer->lastFrame;
   randerer->lastFrame = currentFrame;
-  return deltaTime;
 }
 
 Sprite createSprite(Mesh* mesh, Shader* shader, Texture* texture) {

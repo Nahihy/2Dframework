@@ -60,5 +60,5 @@ void entityUpdateMovement(Entity* entity, float horiMovement, float vertMovement
 void entitySwitchToSide(Entity* entity, Direction side);
 void entityZoom(Entity* entity, float level);
 void entitySetScale(Entity* entity, float scale);
-void entityJump(Entity* entity, World* world);
+void entityJump(Entity* entity, Randerer* randerer, World* world);
 Mesh createEntityMesh(float texCoord[2]);
