@@ -31,7 +31,7 @@ int main() {
       groundAdd(&world.ground, "brick.png", GL_RGBA, GO_SQUARE, 0.6f + 0.4f * i, 0.2f * j - 1.0f, 0.1f, 0.1f, 0.0f);
   
 
-  Player player = createPlayer("mario.png", GL_RGBA, 20, 10.0f, 2.5f, 15.2f, (float[2]){0.3333f, 0.3333f},
+  Player player = createPlayer("mario.png", GL_RGBA, 20, 3.0f, 0.5f, 15.2f, (float[2]){0.3333f, 0.3333f},
                                (TexColumn){0, 1, EN_REPEAT}, (TexColumn){1, 3, EN_REPEAT},
                                (TexColumn){2, 1, EN_REPEAT}, 0.0f, 0.01f, 0.095f, 0.095f);
 
