@@ -53,6 +53,7 @@ Entity createEntity(const char* image, int colorType, ModelAttrib* model, int ig
 void entityDelete(Entity* entity);
 void entityDraw(Entity* entity);
 void entityResize(Entity* entity, float horizontal, float vertical);
+void entitySetSize(Entity* entity, float height, float width);
 void entityChangeTexColumn(Entity* entity, int column);
 void entityNextTex(Entity* entity);
 void entityUpdateTex(Entity* entity);

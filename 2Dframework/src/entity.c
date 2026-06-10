@@ -133,6 +133,14 @@ void entityMove(Entity* entity, float horizontal, float vertical) {
 
 void entityResize(Entity* entity, float horizontal, float vertical) {
   gameObjectResize(&entity->obj, horizontal, vertical);
+  entity->baseCollisionStep = (entity->obj.baseWidth * entity->obj.baseHeight) / 20;
+  entity->collisionStep = entity->baseCollisionStep * entity->obj.scale;
+}
+
+void entitySetSize(Entity* entity, float height, float width) {
+  gameObjectSetSize(&entity->obj, height, width);
+  entity->baseCollisionStep = (entity->obj.baseWidth * entity->obj.baseHeight) / 20;
+  entity->collisionStep = entity->baseCollisionStep * entity->obj.scale;
 }
 
 void entityZoom(Entity* entity, float level) {
