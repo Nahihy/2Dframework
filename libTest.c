@@ -1,3 +1,4 @@
+#include "2Dframework/ground.h"
 #include <2Dframework/2Dframework.h>
 
 void getZoomControl(Player* player, World* world, Randerer* randerer) {
@@ -18,17 +19,17 @@ int main() {
   randererSetAutoFrameResizingKeepRatio(&randerer);
 
   World world = createWorld(createBackground("background.png", GL_RGBA, 0.0f, 0.2f, 0.2f, 0.0f, BG_REPEAT),
-                            1024, (int[2]){0, 100}, (float[2]){0.0f, 0.1f}, 0.1f, (float[4]){-20.0f, 20.0f, 100.0f, -10.0f});
+                            createGround(1024, "brick.png", GL_RGBA, 0.7),
+                            (int[2]){0, 100}, (float[2]){0.0f, 0.1f}, 0.1f, (float[4]){-20.0f, 20.0f, 100.0f, -10.0f});
   
-  groundAdd(&world.ground, "brick.png", GL_RGBA, GO_SQUARE,  1.0f,  -0.6f, 0.1f, 0.1f, 0.0f);
-  groundAdd(&world.ground, "brick.png", GL_RGBA, GO_SQUARE, -1.0f,  2.0f, 0.1f, 0.1f, 0.0f);
+  groundAdd(&world.ground, -1.0f,  2.0f, 0.1f, 0.1f, 0.0f);
   for(float i = -15.0f; i < 1.0f; i += 0.2f) 
-    groundAdd(&world.ground, "brick.png", GL_RGBA, GO_SQUARE, i, -0.8f, 0.1f, 0.1f, 0.0f);
+    groundAdd(&world.ground, i, -0.8f, 0.1f, 0.1f, 0.0f);
   for(float i = -0.8f; i < 5.0f; i += 0.2f) 
-    groundAdd(&world.ground, "brick.png", GL_RGBA, GO_SQUARE, -15.0f, i, 0.1f, 0.1f, 0.0f);
+    groundAdd(&world.ground, -15.0f, i, 0.1f, 0.1f, 0.0f);
   for(int i = 1; i < 30; i++)
     for(int j = 1; j <= i; j++)
-      groundAdd(&world.ground, "brick.png", GL_RGBA, GO_SQUARE, 0.6f + 0.4f * i, 0.2f * j - 1.0f, 0.1f, 0.1f, 0.0f);
+      groundAdd(&world.ground, 0.6f + 0.4f * i, 0.2f * j - 1.0f, 0.1f, 0.1f, 0.0f);
   
 
   Player player = createPlayer("mario.png", GL_RGBA, 20, 5.0f, 1.0f, 7.2f, (float[2]){0.3333f, 0.3333f},

@@ -54,7 +54,7 @@ void entityUpdateMovement(Entity* entity, float horiMovement, float vertMovement
   float horiAccel = entity->accelaration * horiMovement;
 
   if (!horiMovement) {
-    entity->currHoriVelocity *= 0.95;
+    entity->currHoriVelocity *= world->ground.slipperiness;
     if (entity->currHoriVelocity > -0.01f && entity->currHoriVelocity < 0.01f)
       entity->currHoriVelocity = 0.0f;
   }

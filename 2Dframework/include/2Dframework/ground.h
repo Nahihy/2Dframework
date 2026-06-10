@@ -1,17 +1,20 @@
 #pragma once
 #include <2Dframework/gameObject.h>
 
+#define MAX_TEX_NAME_SIZE 128
 
 typedef struct {
   GameObject* objArray;
   int objCount;
   int maxCount;
+  float slipperiness;
+  char texture[MAX_TEX_NAME_SIZE];
+  int colorType;
 } Ground;
 
 
-Ground createGround(int initialCount);
-void groundAdd(Ground* ground, const char* image, int colorType, Mesh mesh,
-               float xCoord, float yCoord, float width, float height, float rotation);
+Ground createGround(int initialCount, const char texture[MAX_TEX_NAME_SIZE], int colorType, float slipperiness);
+void groundAdd(Ground* ground, float xCoord, float yCoord, float width, float height, float rotation);
 void groundEnlarge(Ground* ground, int amount);
 void groundDeleteInSlot(Ground* ground, int slot);
 void groundDelete(Ground* ground);

@@ -1,22 +1,26 @@
 #include "2Dframework/gameObject.h"
 #include <2Dframework/ground.h>
 #include <stdlib.h>
+#include <string.h>
 
 
-Ground createGround(int initialMaxCount) {
+Ground createGround(int initialCount, const char texture[MAX_TEX_NAME_SIZE], int colorType, float slipperiness) {
   Ground ground;
-  ground.objArray = malloc(initialMaxCount * sizeof(GameObject));
+  ground.objArray = malloc(initialCount * sizeof(GameObject));
   ground.objCount = 0;
-  ground.maxCount = initialMaxCount;
+  ground.maxCount = initialCount;
+  strcpy(ground.texture, texture);
+  ground.colorType = colorType;
+  ground.slipperiness = slipperiness;
 
   return ground;
 }
 
-void groundAdd(Ground* ground, const char* image, int colorType, Mesh mesh,
-               float xCoord, float yCoord, float width, float height, float rotation) {
+void groundAdd(Ground* ground, float xCoord, float yCoord, float width, float height, float rotation) {
   if(ground->maxCount <= ground->objCount)
     groundEnlarge(ground, 1);
-  ground->objArray[ground->objCount] = createGameObject(image, colorType, GL_REPEAT, mesh, xCoord, yCoord, width, height, rotation);
+  ground->objArray[ground->objCount] = createGameObject(ground->texture, ground->colorType, GL_REPEAT, GO_SQUARE,
+                                                        xCoord, yCoord, width, height, rotation);
   ground->objCount++;
 }
 

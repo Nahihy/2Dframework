@@ -1,10 +1,10 @@
 #include <2Dframework/world.h>
 
-World createWorld(Background bg, int initGroundCount, int gravityLevel[2],
+World createWorld(Background bg, Ground ground, int gravityLevel[2],
                   float playerSpawn[2], float bgMovementWithGround, float border[4]) {
   World world;
   world.bg = bg;
-  world.ground = createGround(initGroundCount);
+  world.ground = ground;
   world.gravityLevel[0] = gravityLevel[0];
   world.gravityLevel[1] = gravityLevel[1];
   world.playerSpawn[0] = playerSpawn[0];
