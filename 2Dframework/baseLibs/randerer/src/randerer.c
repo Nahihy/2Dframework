@@ -5,6 +5,7 @@
 Randerer randererInit(const char *windowTitle, int windowDimensions[2]) {
   Randerer randerer;
   randerer.lastFrame = 0.0f;
+  randerer.deltaTime = 1.0f;
 
   if(!glfwInit())
     printf("Failed to initialize GLFW\n");

@@ -1,3 +1,4 @@
+#include "2Dframework/entity.h"
 #include <2Dframework/player.h>
 #include <math.h>
 
@@ -72,7 +73,7 @@ void playerGetUserMovement(Player* player, Randerer* randerer, World* world) {
      player->entity.yWorldCoord < world->border[3]) playerSendPlayerToSpawn(player, world);
 
   if(!spacePressed && !dPressed && !aPressed) {
-    entityUpdateMovement(&player->entity, 0.0f, 0.0f, world);
+    entityUpdateMovement(&player->entity, 0.0f, 0.0f, randerer, world);
     entityChangeTexColumn(&player->entity, STAND_ANIM);
     player->delayToNextTex = player->animationDelay;
     return;
@@ -87,7 +88,7 @@ void playerGetUserMovement(Player* player, Randerer* randerer, World* world) {
 
   if(spacePressed) {
     if(player->entity.isOnGround) {
-      entityJump(&player->entity, randerer, world);
+      entityJumpNOUPDATE(&player->entity, randerer);
       if(player->entity.model.currModelColumn != JUMP_ANIM) 
         entityChangeTexColumn(&player->entity, JUMP_ANIM);
     }
@@ -102,7 +103,7 @@ void playerGetUserMovement(Player* player, Randerer* randerer, World* world) {
     if(player->entity.model.currModelColumn != WALK_ANIM) entityChangeTexColumn(&player->entity, WALK_ANIM);
     entitySwitchToSide(&player->entity, LEFT);
   }
-  entityUpdateMovement(&player->entity, totalHoriMovement * randerer->deltaTime, 0.0f, world);
+  entityUpdateMovement(&player->entity, totalHoriMovement, 0.0f, randerer, world);
 }
 
 
