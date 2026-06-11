@@ -36,7 +36,7 @@ typedef struct {
   float accelaration;
   float currHoriVelocity;
   float currVertVelocity;
-  int isOnGround;
+  int currStandedOnGround;
   float currJumpAccel;
   int delayToNextTex;
   float jumpPower;
@@ -63,4 +63,5 @@ void entityZoom(Entity* entity, float level);
 void entitySetScale(Entity* entity, float scale);
 void entityJump(Entity* entity, Randerer* randerer, World* world);
 void entityJumpNOUPDATE(Entity* entity, Randerer* randerer);
+void entityClearCache(Entity* entity);
 Mesh createEntityMesh(float texCoord[2]);

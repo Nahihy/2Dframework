@@ -35,7 +35,7 @@ Entity createEntity(const char* image, int colorType, ModelAttrib* model, int ig
   entity.currHoriVelocity = 0.0f;
   entity.currVertVelocity = 0.0f;
   entity.model.side = RIGHT;
-  entity.isOnGround = 0;
+  entity.currStandedOnGround = -1;
   entity.currJumpAccel = 0.0f;
   entity.jumpPower = jumpPower;
   entity.xWorldCoord = xCoord;
@@ -54,7 +54,8 @@ void entityUpdateMovement(Entity* entity, float horiMovement, float vertMovement
   float horiAccel = entity->accelaration * horiMovement;
 
   if (!horiMovement) {
-    entity->currHoriVelocity *= world->ground.slipperiness;
+    entity->currHoriVelocity *= entity->currStandedOnGround != -1 ?
+      world->groundArray[entity->currStandedOnGround].slipperiness : 0.1;
     if (entity->currHoriVelocity > -0.01f && entity->currHoriVelocity < 0.01f)
       entity->currHoriVelocity = 0.0f;
   }
@@ -67,12 +68,12 @@ void entityUpdateMovement(Entity* entity, float horiMovement, float vertMovement
   entity->xWorldCoord += entity->currHoriVelocity * randerer->deltaTime;
   gameObjectMove(&entity->obj, entity->currHoriVelocity * randerer->deltaTime, 0);
 
-  if (entity->ignoreCollision == EN_USE_COLLISION && groundCheckCollision(&world->ground, &entity->obj)) {
+  if (entity->ignoreCollision == EN_USE_COLLISION && worldCheckCollision(world, &entity->obj) != -1) {
     entity->xWorldCoord -= entity->currHoriVelocity * randerer->deltaTime;
     gameObjectMove(&entity->obj, -(entity->currHoriVelocity * randerer->deltaTime), 0);
     float dir = (entity->currHoriVelocity > 0.0f) ? entity->collisionStep : -entity->collisionStep;
     entity->currHoriVelocity = 0.0f;
-    while (!groundCheckCollision(&world->ground, &entity->obj)) {
+    while (worldCheckCollision(world, &entity->obj) == -1) {
       entity->xWorldCoord += dir;
       gameObjectMove(&entity->obj, dir, 0);
     }
@@ -103,20 +104,23 @@ void entityUpdateMovement(Entity* entity, float horiMovement, float vertMovement
   entity->yWorldCoord += entity->currVertVelocity * randerer->deltaTime;
   gameObjectMove(&entity->obj, 0, entity->currVertVelocity * randerer->deltaTime);
 
-  if (entity->ignoreCollision == EN_USE_COLLISION && groundCheckCollision(&world->ground, &entity->obj)) {
-    entity->yWorldCoord -= entity->currVertVelocity * randerer->deltaTime;
-    gameObjectMove(&entity->obj, 0, -(entity->currVertVelocity * randerer->deltaTime));
-    if (entity->currVertVelocity < 0.0f)
-      entity->isOnGround = 1;
-    float dir = (entity->currVertVelocity > 0.0f) ? entity->collisionStep : -entity->collisionStep;
-    entity->currVertVelocity = 0.0f;
-    while (!groundCheckCollision(&world->ground, &entity->obj)) {
-      entity->yWorldCoord += dir;
-      gameObjectMove(&entity->obj, 0, dir);
+  if (entity->ignoreCollision == EN_USE_COLLISION) {
+    entity->currStandedOnGround = worldCheckCollision(world, &entity->obj);
+    if(entity->currStandedOnGround != -1) {
+      entity->yWorldCoord -= entity->currVertVelocity * randerer->deltaTime;
+      gameObjectMove(&entity->obj, 0, -(entity->currVertVelocity * randerer->deltaTime));
+      if (entity->currVertVelocity > 0.0f)
+        entity->currStandedOnGround = -1;
+      float dir = (entity->currVertVelocity > 0.0f) ? entity->collisionStep : -entity->collisionStep;
+      entity->currVertVelocity = 0.0f;
+      while (worldCheckCollision(world, &entity->obj) == -1) {
+        entity->yWorldCoord += dir;
+        gameObjectMove(&entity->obj, 0, dir);
+      }
+      entity->yWorldCoord -= dir;
+      gameObjectMove(&entity->obj, 0, -dir);
     }
-    entity->yWorldCoord -= dir;
-    gameObjectMove(&entity->obj, 0, -dir);
-  } else entity->isOnGround = 0;
+  } else entity->currStandedOnGround = -1;
 }
 
 void entityDelete(Entity* entity) {
@@ -189,11 +193,19 @@ void entitySwitchToSide(Entity* entity, Direction side) {
 
 void entityJumpNOUPDATE(Entity* entity, Randerer* randerer) {
   entity->currJumpAccel = entity->jumpPower;
-  entity->isOnGround = 0;
+  entity->currStandedOnGround = -1;
 }
 
 void entityJump(Entity* entity, Randerer* randerer, World* world) {
   entity->currJumpAccel = entity->jumpPower;
-  entity->isOnGround = 0;
+  entity->currStandedOnGround = -1;
   entityUpdateMovement(entity, 0.0f, 0.0f, randerer, world);
+}
+
+void entityClearCache(Entity* entity) {
+  entity->currHoriVelocity = 0.0f;
+  entity->currVertVelocity = 0.0f;
+  entity->currStandedOnGround = -1;
+  entitySwitchToSide(entity, RIGHT);
+  entityChangeTexColumn(entity, 0);
 }

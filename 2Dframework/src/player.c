@@ -1,4 +1,3 @@
-#include "2Dframework/entity.h"
 #include <2Dframework/player.h>
 #include <math.h>
 
@@ -24,7 +23,7 @@ Player createPlayer(const char* image, int colorType, int animationDelay, float 
   player.entity.currVertVelocity = 0.0f;
   player.entity.currJumpAccel = 0.0f;
   player.entity.jumpPower = jumpPower;
-  player.entity.isOnGround = 0;
+  player.entity.currStandedOnGround = -1;
   player.savedData = createDatabase("player.dat", BINARY);
 
   player.entity.obj = createGameObject(image, colorType, GL_MIRRORED_REPEAT, createEntityMesh(player.entity.model.modelsize),  xCoord, yCoord, width, height, 0.0f);
@@ -87,7 +86,7 @@ void playerGetUserMovement(Player* player, Randerer* randerer, World* world) {
   else player->delayToNextTex--;
 
   if(spacePressed) {
-    if(player->entity.isOnGround) {
+    if(player->entity.currStandedOnGround != -1) {
       entityJumpNOUPDATE(&player->entity, randerer);
       if(player->entity.model.currModelColumn != JUMP_ANIM) 
         entityChangeTexColumn(&player->entity, JUMP_ANIM);

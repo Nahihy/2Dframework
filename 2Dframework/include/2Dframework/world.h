@@ -4,7 +4,8 @@
 
 typedef struct {
   Background bg;
-  Ground ground;
+  Ground* groundArray;
+  int groundAmount;
   int gravityLevel[2];
   float playerSpawn[2];
   float basePlayerSpawn[2];
@@ -12,10 +13,11 @@ typedef struct {
   float border[4];
 } World;
 
-World createWorld(Background bg, Ground ground, int gravityLevel[2],
+World createWorld(Background bg, Ground* groundArray, int groundAmount, int gravityLevel[2],
                   float playerSpawn[2], float bgMovementWithGround, float border[4]);
 void worldDelete(World* world);
 void worldDraw(World* world);
 void worldMove(World* world, float horizontal, float vertical);
 void worldZoom(World* world, float level);
 void worldSetScale(World* world, float scale);
+int worldCheckCollision(World* world, GameObject* object);

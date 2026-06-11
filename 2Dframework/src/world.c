@@ -1,10 +1,14 @@
+#include "2Dframework/ground.h"
 #include <2Dframework/world.h>
+#include <stdlib.h>
 
-World createWorld(Background bg, Ground ground, int gravityLevel[2],
+World createWorld(Background bg, Ground* groundArray, int groundAmount, int gravityLevel[2],
                   float playerSpawn[2], float bgMovementWithGround, float border[4]) {
   World world;
   world.bg = bg;
-  world.ground = ground;
+  world.groundArray = malloc(groundAmount * sizeof(Ground));
+  for(int i = 0; i < groundAmount; i++) world.groundArray[i] = groundArray[i];
+  world.groundAmount = groundAmount;
   world.gravityLevel[0] = gravityLevel[0];
   world.gravityLevel[1] = gravityLevel[1];
   world.playerSpawn[0] = playerSpawn[0];
@@ -22,28 +26,35 @@ World createWorld(Background bg, Ground ground, int gravityLevel[2],
 
 void worldDelete(World* world) {
   backgroundDelete(&world->bg);
-  groundDelete(&world->ground);
+  for(int i = 0; i < world->groundAmount; i++) groundDelete(&world->groundArray[i]);
 }
 
 
 void worldDraw(World* world) {
   backgroundDraw(&world->bg);
-  groundDraw(&world->ground);
+  for(int i = 0; i < world->groundAmount; i++) groundDraw(&world->groundArray[i]);
 } 
 
 void worldMove(World* world, float horizontal, float vertical) {
   backgroundMove(&world->bg, -horizontal * world->bgMovementWithGround, -vertical * world->bgMovementWithGround);
-  groundMove(&world->ground, horizontal, vertical);
+  for(int i = 0; i < world->groundAmount; i++) groundMove(&world->groundArray[i], horizontal, vertical);
   world->playerSpawn[0] += horizontal;
   world->playerSpawn[1] += vertical;
 }
 
 void worldZoom(World* world, float level) {
   backgroundZoom(&world->bg, level);
-  groundZoom(&world->ground, level);
+  for(int i = 0; i < world->groundAmount; i++) groundZoom(&world->groundArray[i], level);
 }
 
 void worldSetScale(World* world, float scale) {
   backgroundSetScale(&world->bg, scale);
-  groundSetScale(&world->ground, scale);
+  for(int i = 0; i < world->groundAmount; i++) groundSetScale(&world->groundArray[i], scale);
+}
+
+int worldCheckCollision(World* world, GameObject* object) {
+  for(int i = 0; i < world->groundAmount; i++) 
+    if(groundCheckCollision(&world->groundArray[i], object))
+      return i;
+  return -1;
 }
