@@ -18,8 +18,8 @@ int main() {
   randererSetAutoFrameResizingKeepRatio(&randerer);
 
   World world = createWorld(createBackground("background.png", GL_RGBA, 0.0f, 0.2f, 0.2f, 0.0f, BG_REPEAT),
-                            (Ground[]){createGround(1024, "brick.png", GL_RGBA, 0.6f), 
-                                       createGround(64, "ice.png", GL_RGBA, 0.95f)}, 2,
+                            (Ground[]){createGround(1024, "brick.png", GL_RGBA, 0.3f), 
+                                       createGround(64, "ice.png", GL_RGBA, 0.05f)}, 2,
                             (float[2]){0.0f, 1.0f}, (float[2]){0.0f, 0.1f}, 0.1f, (float[4]){-20.0f, 20.0f, 100.0f, -10.0f});
   
   groundAdd(&world.groundArray[1], -1.0f,  0.4f, 0.1f, 0.1f, 0.0f);

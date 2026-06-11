@@ -1,17 +1,16 @@
-#include "2Dframework/gameObject.h"
 #include <2Dframework/ground.h>
 #include <stdlib.h>
 #include <string.h>
 
 
-Ground createGround(int initialCount, const char texture[MAX_TEX_NAME_SIZE], int colorType, float slipperiness) {
+Ground createGround(int initialCount, const char texture[MAX_TEX_NAME_SIZE], int colorType, float friction) {
   Ground ground;
   ground.objArray = malloc(initialCount * sizeof(GameObject));
   ground.objCount = 0;
   ground.maxCount = initialCount;
   strcpy(ground.texture, texture);
   ground.colorType = colorType;
-  ground.slipperiness = slipperiness;
+  ground.friction = friction;
 
   return ground;
 }

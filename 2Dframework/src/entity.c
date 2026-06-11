@@ -59,7 +59,7 @@ void entityUpdateMovement(Entity* entity, float horiMovement, float vertMovement
   else if (entity->currHoriVelocity < -entity->maxVelocity) entity->currHoriVelocity = -entity->maxVelocity;
 
   if(entity->currStandedOnGround != -1) {
-    entity->currHoriVelocity *= world->groundArray[entity->currStandedOnGround].slipperiness;
+    entity->currHoriVelocity -= world->groundArray[entity->currStandedOnGround].friction * entity->currHoriVelocity;
     if (entity->currHoriVelocity > -0.01f && entity->currHoriVelocity < 0.01f)
       entity->currHoriVelocity = 0.0f;
   }
