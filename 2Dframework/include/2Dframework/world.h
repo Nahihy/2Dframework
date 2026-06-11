@@ -6,14 +6,14 @@ typedef struct {
   Background bg;
   Ground* groundArray;
   int groundAmount;
-  int gravityLevel[2];
+  float gravityLevel[2];
   float playerSpawn[2];
   float basePlayerSpawn[2];
   float bgMovementWithGround;
   float border[4];
 } World;
 
-World createWorld(Background bg, Ground* groundArray, int groundAmount, int gravityLevel[2],
+World createWorld(Background bg, Ground* groundArray, int groundAmount, float gravityLevel[2],
                   float playerSpawn[2], float bgMovementWithGround, float border[4]);
 void worldDelete(World* world);
 void worldDraw(World* world);

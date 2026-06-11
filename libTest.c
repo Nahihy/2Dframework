@@ -18,9 +18,9 @@ int main() {
   randererSetAutoFrameResizingKeepRatio(&randerer);
 
   World world = createWorld(createBackground("background.png", GL_RGBA, 0.0f, 0.2f, 0.2f, 0.0f, BG_REPEAT),
-                            (Ground[]){createGround(1024, "brick.png", GL_RGBA, 0.7), 
-                            createGround(64, "ice.png", GL_RGBA, 0.95)}, 2,
-                            (int[2]){0, 100}, (float[2]){0.0f, 0.1f}, 0.1f, (float[4]){-20.0f, 20.0f, 100.0f, -10.0f});
+                            (Ground[]){createGround(1024, "brick.png", GL_RGBA, 0.6f), 
+                                       createGround(64, "ice.png", GL_RGBA, 0.95f)}, 2,
+                            (float[2]){0.0f, 1.0f}, (float[2]){0.0f, 0.1f}, 0.1f, (float[4]){-20.0f, 20.0f, 100.0f, -10.0f});
   
   groundAdd(&world.groundArray[1], -1.0f,  0.4f, 0.1f, 0.1f, 0.0f);
   for(float i = -15.0f; i < -7.0f; i += 0.2f) 
@@ -34,7 +34,7 @@ int main() {
       groundAdd(&world.groundArray[0], 0.6f + 0.4f * i, 0.2f * j - 1.0f, 0.1f, 0.1f, 0.0f);
   
 
-  Player player = createPlayer("mario.png", GL_RGBA, 20, 5.0f, 1.0f, 7.2f, (float[2]){0.3333f, 0.3333f},
+  Player player = createPlayer("mario.png", GL_RGBA, 20, 3.0f, 1.0f, 4.0f, (float[2]){0.3333f, 0.3333f},
                                (TexColumn){0, 1, EN_REPEAT}, (TexColumn){1, 3, EN_REPEAT},
                                (TexColumn){2, 1, EN_REPEAT}, 0.0f, 0.01f, 0.095f, 0.095f);
 
