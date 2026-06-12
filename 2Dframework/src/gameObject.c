@@ -105,19 +105,19 @@ void gameObjectUpdateTex(GameObject* object) {
 
 int gameObjectCheckCollision(GameObject* object1, GameObject* object2) {
 
-  float one_left = object1->xCoord - object1->width;
-  float one_right = object1->xCoord + object1->width;
-  float one_bottom = object1->yCoord - object1->height;
-  float one_top = object1->yCoord + object1->height;
+  float oneLeft = object1->xCoord - object1->width;
+  float oneRight = object1->xCoord + object1->width;
+  float oneBottom = object1->yCoord - object1->height;
+  float oneTop = object1->yCoord + object1->height;
   
-  float two_left = object2->xCoord - object2->width;
-  float two_right = object2->xCoord + object2->width;
-  float two_bottom = object2->yCoord - object2->height;
-  float two_top = object2->yCoord + object2->height;
+  float twoLeft = object2->xCoord - object2->width;
+  float twoRight = object2->xCoord + object2->width;
+  float twoBottom = object2->yCoord - object2->height;
+  float twoTop = object2->yCoord + object2->height;
   
   return 
-    one_right >= two_left && two_right >= one_left &&
-    one_top >= two_bottom && two_top >= one_bottom;
+    oneRight >= twoLeft && twoRight >= oneLeft &&
+    oneTop >= twoBottom && twoTop >= oneBottom;
 }
 
 void gameObjectSetScale(GameObject* object, float scale) {

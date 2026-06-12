@@ -69,7 +69,11 @@ void playerGetUserMovement(Player* player, Randerer* randerer, World* world) {
   if(player->entity.xWorldCoord < world->border[0] ||
      player->entity.xWorldCoord > world->border[1] ||
      player->entity.yWorldCoord > world->border[2] ||
-     player->entity.yWorldCoord < world->border[3]) playerSendPlayerToSpawn(player, world);
+     player->entity.yWorldCoord < world->border[3]) {
+    playerSendPlayerToSpawn(player, world);
+    entityClearCache(&player->entity);
+    playerSendToLastSavedLocation(player, world);
+  }
 
   if(!spacePressed && !dPressed && !aPressed) {
     entityUpdateMovement(&player->entity, 0.0f, 0.0f, randerer, world);
@@ -117,11 +121,19 @@ void playerSaveLocation(Player* player) {
   databaseSetFloat(&player->savedData, "yWorldCoord", player->entity.yWorldCoord);
 }
 
-void playerSendToLastSavedLocation(Player* player) {
+void playerSendToLastSavedLocation(Player* player, World* world) {
   float savedXCoord = databaseGetFloat(&player->savedData, "xWorldCoord");
   float savedYCoord = databaseGetFloat(&player->savedData, "yWorldCoord");
   if(isnan(savedXCoord) || isnan(savedYCoord)) return;
+  worldMove(world,
+    player->entity.xWorldCoord - player->entity.obj.baseXCoord,
+    player->entity.yWorldCoord - player->entity.obj.baseYCoord);
   gameObjectSetLocation(&player->entity.obj, savedXCoord, savedYCoord);
   player->entity.xWorldCoord = savedXCoord;
   player->entity.yWorldCoord = savedYCoord; 
+}
+
+void playerDeleteSavedLocation(Player* player) {
+  databaseRemoveVar(&player->savedData, "xWorldCoord");
+  databaseRemoveVar(&player->savedData, "yWorldCoord");
 }

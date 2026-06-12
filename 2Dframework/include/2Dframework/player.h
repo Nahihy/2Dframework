@@ -25,4 +25,5 @@ void playerDraw(Player* player);
 void playerGetUserMovement(Player* player, Randerer* randerer, World* world);
 void playerSendPlayerToSpawn(Player* player, World* world);
 void playerSaveLocation(Player* player);
-void playerSendToLastSavedLocation(Player* player);
+void playerSendToLastSavedLocation(Player* player, World* world);
+void playerDeleteSavedLocation(Player* player);
