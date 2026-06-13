@@ -6,4 +6,6 @@ add_library(database STATIC
   src/text.c
 )
 target_include_directories(database PUBLIC include)
-target_link_libraries(database PRIVATE m)
+if(NOT WIN32)
+  target_link_libraries(database PRIVATE m)
+endif()

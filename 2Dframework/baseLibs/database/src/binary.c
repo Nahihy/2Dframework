@@ -2,8 +2,12 @@
 #include <math.h>
 #include <stdio.h>
 #include <string.h>
-#include <unistd.h>
 
+#ifdef _WIN32
+  #include <io.h>
+#else
+  #include <unistd.h>
+#endif
 
 typedef struct {
   char name[DB_MAX_NAME_SIZE];
@@ -133,6 +137,10 @@ void databaseRemoveVarBINARY(Database* database, const char* varName) {
   }
 
   long newSize = (index) * sizeof(Record);
+#ifdef _WIN32
+  _chsize(_fileno(database->file), (long)newSize);
+#else
   ftruncate(fileno(database->file), newSize);
+#endif
   databaseClose(database);
 }

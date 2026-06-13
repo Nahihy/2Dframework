@@ -11,5 +11,8 @@ set(TEXTURE_DIR "textures" CACHE STRING "" FORCE)
 set(TEXTURE_EXTENSIONS "png;jpg"   CACHE STRING "" FORCE)
 
 add_subdirectory(2Dframework)
-
-target_link_libraries(2DframeworkShowcase PRIVATE 2Dframework randerer glad glfw OpenGL::GL m stb)
+if(NOT WIN32)
+  target_link_libraries(2DframeworkShowcase PRIVATE 2Dframework randerer glad glfw OpenGL::GL stb m)
+else()
+  target_link_libraries(2DframeworkShowcase PRIVATE 2Dframework randerer glad glfw OpenGL::GL stb)
+endif()

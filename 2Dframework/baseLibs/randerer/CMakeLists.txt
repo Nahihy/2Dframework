@@ -33,8 +33,11 @@ add_subdirectory(baseLibs/stb)
 add_subdirectory(baseLibs/glfw)
 
 target_include_directories(randerer PUBLIC include)
-target_link_libraries(randerer PUBLIC glfw glad stb OpenGL::GL cglm m)
-
+if(NOT WIN32)
+  target_link_libraries(randerer PUBLIC glfw glad stb OpenGL::GL cglm m)
+else()
+  target_link_libraries(randerer PUBLIC glfw glad stb OpenGL::GL cglm)
+endif()
 target_compile_definitions(randerer PUBLIC
   SHADER_DIR="shaders"
   TEXTURE_DIR="textures"
