@@ -8,7 +8,6 @@ A lightweight persistent key-value storage library for C. Saves and loads named 
 
 - Standart C compiler
 - CMake 
-- Windows branch for Windows and Master branch for unix/unix-like(linux/bsd/macos)
 
 Include with:
 ```c

@@ -11,8 +11,7 @@ In practice you will rarely use the lower-level types directly when working insi
 - OpenGL 3.3 Core Profile capable GPU / driver
 - CMake 3.14+
 - Standard C compiler
-- Windows branch for Windows Master branch for unix/unix-like (linux/bsd/macos)
-- The following bundled dependencies (added via `add_subdirectory` in the CMakeLists):
+- The following bundled dependencies (added via `add_subdirectory` in the CMakeLists. they are already included):
   - **GLFW** — window creation and input
   - **glad** — OpenGL function loader
   - **cglm** — math (matrices, vectors)
