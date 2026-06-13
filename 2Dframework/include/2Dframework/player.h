@@ -1,4 +1,5 @@
 #pragma once
+#include <database/database.h>
 #include <2Dframework/entity.h>
 #include <2Dframework/world.h>
 
