@@ -82,7 +82,7 @@ void entityUpdateMovement(Entity* entity, float horiMovement, float vertMovement
   }
 
   float vertAccel = entity->accelaration * vertMovement + entity->currJumpAccel;
-  entity->currJumpAccel /= 1.5f;
+  entity->currJumpAccel *= powf(1.0f / 1.5f, randerer->deltaTime * 60.0f);
 
   if (!vertMovement) {
     if (entity->currVertVelocity > 0.0f) {

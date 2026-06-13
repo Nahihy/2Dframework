@@ -82,7 +82,7 @@ int main() {
   // Sprite sheet: 3 columns wide (stand, walk, jump), 3 frames tall
   Player player = createPlayer(
     "player.png", GL_RGBA,
-    20,           // animation frame delay (frames between texture advances)
+    0.2f,         // animation delay in seconds
     3.0f,         // maxVelocity
     1.0f,         // acceleration
     4.0f,         // jumpPower
@@ -522,7 +522,7 @@ A ready-to-use player entity with three built-in animations (stand, walk, jump),
 
 ### `createPlayer`
 ```c
-Player createPlayer(const char* image, int colorType, int animationDelay,
+Player createPlayer(const char* image, int colorType, float animationDelay,
                     float maxVelocity, float accelaration, float jumpPower,
                     float modelSize[2],
                     TexColumn standAnim, TexColumn walkAnim, TexColumn jumpAnim,
