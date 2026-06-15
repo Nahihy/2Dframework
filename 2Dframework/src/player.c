@@ -14,6 +14,7 @@ Player createPlayer(const char* image, int colorType, float animationDelay, floa
   player.entity.model.modelColumns[WALK_ANIM] = walkAnim;
   player.entity.model.modelColumns[JUMP_ANIM] = jumpAnim;
   player.entity.model.modelColumnCount = TOTAL_ANIM_SIZE;
+  player.entity.model.nextTexMov = 1;
   player.entity.model.currModel = 1;
   player.entity.model.currModelColumn = STAND_ANIM;
   player.entity.model.side = RIGHT;

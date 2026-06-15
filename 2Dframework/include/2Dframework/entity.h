@@ -22,6 +22,7 @@ typedef struct {
 typedef struct {
   float modelsize[2];
   TexColumn* modelColumns;
+  int nextTexMov;
   int modelColumnCount;
   int currModelColumn;
   int currModel;

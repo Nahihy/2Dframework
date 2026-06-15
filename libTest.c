@@ -1,3 +1,4 @@
+#include "2Dframework/entity.h"
 #include <2Dframework/2Dframework.h>
 #include <stdio.h>
 
@@ -39,11 +40,11 @@ int main() {
   while(!randererShouldClose(&randerer)) {
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT);
+    for(int i = 0; i < 5000; i++) puts("");
     randererUpdateDeltaTime(&randerer);
-    printf("%.2f\n", randerer.deltaTime);
     worldDraw(&world);
-    
     playerDraw(&player);
+
     playerGetUserMovement(&player, &randerer, &world);
     getZoomControl(&player, &world, &randerer);
 

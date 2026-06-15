@@ -1,5 +1,5 @@
 #include <2Dframework/entity.h>
-#include <stdio.h>
+#include <stdlib.h>
 
 Mesh createEntityMesh(float texCoord[2]) {
   float vertices[16] = {
@@ -156,11 +156,18 @@ void entitySetScale(Entity* entity, float scale) {
 }
 
 void entityNextTex(Entity* entity) {
-  entity->model.currModel++;
+  entity->model.currModel += entity->model.nextTexMov;
   TexColumn* currColumn = &(entity->model.modelColumns[entity->model.currModelColumn]);
   if(currColumn->count < entity->model.currModel)
     if(currColumn->actionAtEnd == EN_REPEAT) entity->model.currModel = 1;
-    else if(currColumn->actionAtEnd == EN_MIRROR) entity->model.currModel -= 2;
+    else if(currColumn->actionAtEnd == EN_MIRROR) {
+      entity->model.currModel -= 2 * entity->model.nextTexMov;
+      entity->model.nextTexMov = -entity->model.nextTexMov;
+    }
+  if(entity->model.currModel < 1) {
+    entity->model.nextTexMov = abs(entity->model.nextTexMov);
+    entity->model.currModel = 1;
+  }
   entityUpdateTex(entity);
 }
 
