@@ -21,14 +21,10 @@ Mesh createEntityMesh(float texCoord[2]) {
   return createMesh(vertices, 16, indices, 6, attrib, 2);
 }
 
-Entity createEntity(const char* image, int colorType, ModelAttrib* model, int ignoreCollision, float accelaration,
+Entity createEntity(const char* image, GLenum colorType, ModelAttrib* model, CollisionStatus collisionStatus, float accelaration,
                     float maxVelocity, float jumpPower, float xCoord, float yCoord, float width, float height) {
-  if(ignoreCollision != EN_IGNORE_COLLISION && ignoreCollision != EN_USE_COLLISION) {
-    printf("Warning: invalid collision value in %s entity. only set to \"EN_USE_COLLISION\" or \"EN_IGNORE_COLLISION\", it has been set to ignore", image);
-    ignoreCollision = EN_IGNORE_COLLISION;
-  }
   Entity entity;
-  entity.ignoreCollision = ignoreCollision;
+  entity.collisionStatus = collisionStatus;
   entity.model = *model;
   entity.accelaration = accelaration;
   entity.maxVelocity = maxVelocity;
@@ -73,7 +69,7 @@ void entityUpdateMovement(Entity* entity, float horiMovement, float vertMovement
   entity->xWorldCoord += entity->currHoriVelocity * randerer->deltaTime;
   gameObjectMove(&entity->obj, entity->currHoriVelocity * randerer->deltaTime, 0);
 
-  if (entity->ignoreCollision == EN_USE_COLLISION && worldCheckCollision(world, &entity->obj) != -1) {
+  if (entity->collisionStatus == USE_COLLISION && worldCheckCollision(world, &entity->obj) != -1) {
     entity->xWorldCoord -= entity->currHoriVelocity * randerer->deltaTime;
     gameObjectMove(&entity->obj, -(entity->currHoriVelocity * randerer->deltaTime), 0);
     float dir = (entity->currHoriVelocity > 0.0f) ? entity->collisionStep : -entity->collisionStep;
@@ -101,7 +97,7 @@ void entityUpdateMovement(Entity* entity, float horiMovement, float vertMovement
   entity->yWorldCoord += entity->currVertVelocity * randerer->deltaTime;
   gameObjectMove(&entity->obj, 0, entity->currVertVelocity * randerer->deltaTime);
 
-  if (entity->ignoreCollision == EN_USE_COLLISION) {
+  if (entity->collisionStatus == USE_COLLISION) {
     entity->currStandedOnGround = worldCheckCollision(world, &entity->obj);
     if(entity->currStandedOnGround != -1) {
       entity->yWorldCoord -= entity->currVertVelocity * randerer->deltaTime;

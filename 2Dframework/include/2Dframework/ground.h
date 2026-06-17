@@ -9,11 +9,11 @@ typedef struct {
   int maxCount;
   float friction;
   char texture[MAX_TEX_NAME_SIZE];
-  int colorType;
+  GLenum colorType;
 } Ground;
 
 
-Ground createGround(int initialCount, const char texture[MAX_TEX_NAME_SIZE], int colorType, float friction);
+Ground createGround(int initialCount, const char texture[MAX_TEX_NAME_SIZE], GLenum colorType, float friction);
 void groundAdd(Ground* ground, float xCoord, float yCoord, float width, float height, float rotation);
 void groundEnlarge(Ground* ground, int amount);
 void groundDeleteInSlot(Ground* ground, int slot);

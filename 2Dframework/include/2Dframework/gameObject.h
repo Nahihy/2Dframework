@@ -16,7 +16,7 @@ typedef struct {
   float baseXCoord, baseYCoord;
 } GameObject;
 
-GameObject createGameObject(const char* image, int colorType, int texWrap, Mesh mesh,
+GameObject createGameObject(const char* image, GLenum colorType, GLenum texWrap, Mesh mesh,
                             float xCoord, float yCoord, float width, float height, float rotation);
 void gameObjectDelete(GameObject* object);
 void gameObjectDraw(GameObject* object);
@@ -24,7 +24,7 @@ void gameObjectMove(GameObject* object, float horizontal, float vertical);
 void gameObjectResize(GameObject* object, float horizontal, float vertical);
 void gameObjectSetSize(GameObject* object, float height, float width);
 void gameObjectRotate(GameObject* object, float rotation);
-void gameObjectChangeTexFile(GameObject* object, const char* image, int colorType);
+void gameObjectChangeTexFile(GameObject* object, const char* image, GLenum colorType);
 void gameObjectMoveTex(GameObject* object, float horizontal, float vertical);
 void gameObjectUpdateTex(GameObject* object);
 void gameObjectUpdate(GameObject* object);

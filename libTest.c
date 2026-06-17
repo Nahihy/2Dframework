@@ -20,8 +20,8 @@ int main() {
 
   World world = createWorld(createBackground("background.png", GL_RGBA, 0.0f, 0.2f, 0.2f, 0.0f, BG_REPEAT),
                             (Ground[3]){createGround(64, "brick.png", GL_RGBA, 0.3f), 
-                                       createGround(64, "ice.png", GL_RGBA, 0.05f),
-                                       createGround(64, "mud.png", GL_RGBA, 0.6f)}, 3,
+                                        createGround(64, "ice.png", GL_RGBA, 0.05f),
+                                        createGround(64, "mud.png", GL_RGBA, 0.6f)}, 3,
                             (float[2]){0.0f, 60.0f}, 0.1f, (float[2]){-14.5f, 2.1f}, 0.1f, (float[4]){-20.0f, 50.0f, 100.0f, -50.0f});
   
   createParkourCourse(&world);

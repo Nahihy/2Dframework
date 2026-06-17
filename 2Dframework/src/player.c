@@ -1,12 +1,12 @@
 #include <2Dframework/player.h>
 #include <math.h>
 
-Player createPlayer(const char* image, int colorType, float animationDelay, float maxVelocity, float accelaration, float jumpPower, float modelSize[2],
+Player createPlayer(const char* image, GLenum colorType, float animationDelay, float maxVelocity, float accelaration, float jumpPower, float modelSize[2],
                     TexColumn standAnim, TexColumn walkAnim, TexColumn jumpAnim, float xCoord, float yCoord, float width, float height) {
   Player player;
   player.animationDelay = animationDelay;
   player.delayToNextTex = animationDelay;
-  player.entity.ignoreCollision = EN_USE_COLLISION;
+  player.entity.collisionStatus = USE_COLLISION;
   player.entity.model.modelsize[0] = modelSize[0];
   player.entity.model.modelsize[1] = modelSize[1];
   player.entity.model.modelColumns = malloc(TOTAL_ANIM_SIZE * sizeof(TexColumn));

@@ -1,7 +1,6 @@
 #include <2Dframework/background.h>
-#include <stdio.h>
 
-Background createBackground(const char* image, int colorType, float left, float right, float up, float down, int bgMode) {
+Background createBackground(const char* image, GLenum colorType, float left, float right, float up, float down, BGmode bgMode) {
   Background background;
   glm_vec2((vec2){0.0f, 0.0f}, background.texOffset);
   background.scale = 1.0f;
@@ -27,12 +26,6 @@ Background createBackground(const char* image, int colorType, float left, float 
   };
 
   Mesh mesh = createMesh(vertices, 16, indices, 6, attrib, 2);
-
-  if(bgMode != BG_REPEAT && bgMode != BG_MIRROR) {
-    printf("Warning: background %s has an invalid mode, only set to \"BG_REPEAT\" or \"BG_MIRROR\". it has been set to repeat mode."
-           , image);
-    bgMode = BG_REPEAT;
-  }
 
   Texture texture = createTexture(GL_TEXTURE0);
   textureLoad(&texture, image, bgMode, GL_LINEAR_MIPMAP_LINEAR, GL_NEAREST, colorType);

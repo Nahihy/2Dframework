@@ -1,8 +1,10 @@
 #pragma once
 #include <randerer/randerer.h>
 
-#define BG_REPEAT GL_REPEAT
-#define BG_MIRROR GL_MIRRORED_REPEAT
+typedef enum {
+  REPEAT = GL_REPEAT,
+  MIRROR = GL_MIRRORED_REPEAT
+} BGmode;
 
 typedef struct {
   Sprite sprite;
@@ -10,7 +12,7 @@ typedef struct {
   float scale;
 } Background;
 
-Background createBackground(const char* image, int colorType, float left, float right, float up, float down, int bgMode);
+Background createBackground(const char* image, GLenum colorType, float left, float right, float up, float down, BGmode bgMode);
 void backgroundDraw(Background* background);
 void backgroundDelete(Background* background);
 void backgroundMove(Background* background, float horizontal, float vertical);

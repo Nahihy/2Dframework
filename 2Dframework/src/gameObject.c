@@ -1,6 +1,6 @@
 #include <2Dframework/gameObject.h>
 
-GameObject createGameObject(const char* image, int colorType, int texWrap, Mesh mesh, float xCoord, float yCoord, float width, float height, float rotation) {
+GameObject createGameObject(const char* image, GLenum colorType, GLenum texWrap, Mesh mesh, float xCoord, float yCoord, float width, float height, float rotation) {
   GameObject object;
 
   object.xCoord = xCoord;
@@ -88,7 +88,7 @@ void gameObjectUpdate(GameObject* object) {
   shaderSetMat4(&object->sprite.shader, "transform", trans);
 }
 
-void gameObjectChangeTexFile(GameObject* object, const char* image, int colorType) {
+void gameObjectChangeTexFile(GameObject* object, const char* image, GLenum colorType) {
   textureLoad(&object->sprite.texture, image, GL_REPEAT, GL_LINEAR_MIPMAP_LINEAR, GL_NEAREST, colorType);
 }
 

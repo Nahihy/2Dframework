@@ -1,5 +1,4 @@
 #include <randerer/texture.h>
-#include <glad/glad.h>
 #include <stb_image.h>
 
 #include <stdio.h>
@@ -13,14 +12,14 @@ static unsigned char* loadTextureData(const char* path, int* w, int* h, int* cha
   return data;
 
 }
-Texture createTexture(int unit) {
+Texture createTexture(GLenum unit) {
   Texture texture;
   texture.unit = unit;
   glGenTextures(1, &texture.ID);
   return texture;
 }
 
-void textureLoad(Texture* texture, const char* path, int wrap, int minFilter, int maxFilter, int colorType) {
+void textureLoad(Texture* texture, const char* path, GLenum wrap, GLenum minFilter, GLenum maxFilter, GLenum colorType) {
   glActiveTexture(texture->unit);
   glBindTexture(GL_TEXTURE_2D, texture->ID);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrap);

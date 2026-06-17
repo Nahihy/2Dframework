@@ -3,10 +3,15 @@
 #include <2Dframework/ground.h>
 #include <2Dframework/world.h>
 
-#define EN_USE_COLLISION 0
-#define EN_IGNORE_COLLISION 1
-#define EN_REPEAT 2
-#define EN_MIRROR 3
+typedef enum {
+  USE_COLLISION,
+  IGNORE_COLLISION
+} CollisionStatus;
+
+typedef enum {
+  REPEAT,
+  MIRROR
+} TexAction;
 
 typedef enum {
   LEFT = -1,
@@ -16,7 +21,7 @@ typedef enum {
 typedef struct {
   int column;
   int count;
-  int actionAtEnd;
+  TexAction actionAtEnd;
 } TexColumn;
 
 typedef struct {
@@ -31,7 +36,7 @@ typedef struct {
 
 typedef struct {
   GameObject obj;
-  int ignoreCollision;
+  CollisionStatus collisionStatus;
   ModelAttrib model;
   float maxVelocity;
   float accelaration;
@@ -49,7 +54,7 @@ typedef struct {
 
 
 
-Entity createEntity(const char* image, int colorType, ModelAttrib* model, int ignoreCollision, float accelaration,
+Entity createEntity(const char* image, GLenum colorType, ModelAttrib* model, CollisionStatus collisionStatus, float accelaration,
                     float maxVelocity, float jumpPower, float xCoord, float yCoord, float width, float height);
 void entityDelete(Entity* entity);
 void entityDraw(Entity* entity);

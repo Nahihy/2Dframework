@@ -3,7 +3,7 @@
 #include <string.h>
 
 
-Ground createGround(int initialCount, const char texture[MAX_TEX_NAME_SIZE], int colorType, float friction) {
+Ground createGround(int initialCount, const char texture[MAX_TEX_NAME_SIZE], GLenum colorType, float friction) {
   Ground ground;
   ground.objArray = malloc(initialCount * sizeof(GameObject));
   ground.objCount = 0;
