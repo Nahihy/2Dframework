@@ -1,6 +1,4 @@
-#include "2Dframework/entity.h"
 #include <2Dframework/2Dframework.h>
-#include <stdio.h>
 
 void getZoomControl(Player* player, World* world, Randerer* randerer) {
   if(glfwGetKey(randerer->window.GLFWwindow, GLFW_KEY_MINUS) == GLFW_PRESS) {
@@ -24,11 +22,11 @@ int main() {
                             (Ground[3]){createGround(64, "brick.png", GL_RGBA, 0.3f), 
                                        createGround(64, "ice.png", GL_RGBA, 0.05f),
                                        createGround(64, "mud.png", GL_RGBA, 0.6f)}, 3,
-                            (float[2]){0.0f, 1.0f}, (float[2]){-14.5f, 2.1f}, 0.1f, (float[4]){-20.0f, 50.0f, 100.0f, -50.0f});
+                            (float[2]){0.0f, 60.0f}, 0.1f, (float[2]){-14.5f, 2.1f}, 0.1f, (float[4]){-20.0f, 50.0f, 100.0f, -50.0f});
   
   createParkourCourse(&world);
 
-  Player player = createPlayer("mario.png", GL_RGBA, 0.2f, 3.0f, 1.0f, 4.5f, (float[2]){0.3333f, 0.3333f},
+  Player player = createPlayer("mario.png", GL_RGBA, 0.2f, 180.0f, 60.0f, 240.0f, (float[2]){0.3333f, 0.3333f},
                                (TexColumn){0, 1, EN_REPEAT}, (TexColumn){1, 3, EN_REPEAT},
                                (TexColumn){2, 1, EN_REPEAT}, 0.0f, 0.01f, 0.095f, 0.095f);
 
@@ -40,7 +38,7 @@ int main() {
   while(!randererShouldClose(&randerer)) {
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT);
-    //for(int i = 0; i < 5000; i++) puts("");
+    // for(int i = 0; i < 5000; i++) puts("");
     randererUpdateDeltaTime(&randerer);
     worldDraw(&world);
     playerDraw(&player);

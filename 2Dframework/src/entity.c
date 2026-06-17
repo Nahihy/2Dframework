@@ -53,18 +53,23 @@ void entityUpdateMovement(Entity* entity, float horiMovement, float vertMovement
 
   float horiAccel = entity->accelaration * horiMovement;
 
-  entity->currHoriVelocity += horiAccel * randerer->deltaTime * 60.0f;
+  entity->currHoriVelocity += horiAccel * randerer->deltaTime;
 
   if (entity->currHoriVelocity > entity->maxVelocity) entity->currHoriVelocity = entity->maxVelocity;
   else if (entity->currHoriVelocity < -entity->maxVelocity) entity->currHoriVelocity = -entity->maxVelocity;
 
-  if(entity->currStandedOnGround != -1) {
+  if(entity->currStandedOnGround != -1)
     entity->currHoriVelocity -= world->groundArray[entity->currStandedOnGround].friction * entity->currHoriVelocity * randerer->deltaTime * 60.0f;
-    if (entity->currHoriVelocity > -0.01f && entity->currHoriVelocity < 0.01f)
-      entity->currHoriVelocity = 0.0f;
-  }
 
-  entity->currVertVelocity -= world->gravityLevel[0] * randerer->deltaTime;
+
+  entity->currHoriVelocity -= world->gravityLevel[0] * randerer->deltaTime;
+
+  Direction direction;
+  if(entity->currHoriVelocity > 0.0f) direction = RIGHT;
+  else direction = LEFT;
+  entity->currHoriVelocity -= world->airResistence * entity->currHoriVelocity * randerer->deltaTime * 60.0f;  
+  if(direction * entity->currHoriVelocity < 0.0f) entity->currHoriVelocity = 0.0f;
+
   entity->xWorldCoord += entity->currHoriVelocity * randerer->deltaTime;
   gameObjectMove(&entity->obj, entity->currHoriVelocity * randerer->deltaTime, 0);
 
@@ -84,11 +89,15 @@ void entityUpdateMovement(Entity* entity, float horiMovement, float vertMovement
   float vertAccel = entity->accelaration * vertMovement + entity->currJumpAccel;
   entity->currJumpAccel *= powf(1.0f / 1.5f, randerer->deltaTime * 60.0f);
 
-   entity->currHoriVelocity -= 6.0f * entity->currHoriVelocity * randerer->deltaTime;
+  entity->currVertVelocity += vertAccel * randerer->deltaTime;
 
-  entity->currVertVelocity += vertAccel * randerer->deltaTime * 60.0f;
+  entity->currVertVelocity -= world->gravityLevel[1] * randerer->deltaTime;
 
-  entity->currVertVelocity -= world->gravityLevel[1] * randerer->deltaTime * 60.0f;
+  if(entity->currVertVelocity > 0.0f) direction = RIGHT;
+  else direction = LEFT;
+  entity->currVertVelocity -= world->airResistence * entity->currVertVelocity * randerer->deltaTime * 60.0f;
+  if(entity->currVertVelocity * direction < 0.0f) entity->currVertVelocity = 0.0f;
+
   entity->yWorldCoord += entity->currVertVelocity * randerer->deltaTime;
   gameObjectMove(&entity->obj, 0, entity->currVertVelocity * randerer->deltaTime);
 

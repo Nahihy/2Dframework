@@ -1,7 +1,7 @@
 #include <2Dframework/world.h>
 #include <stdlib.h>
 
-World createWorld(Background bg, Ground* groundArray, int groundAmount, float gravityLevel[2],
+World createWorld(Background bg, Ground* groundArray, int groundAmount, float gravityLevel[2], float airResistence,
                   float playerSpawn[2], float bgMovementWithGround, float border[4]) {
   World world;
   world.bg = bg;
@@ -10,6 +10,7 @@ World createWorld(Background bg, Ground* groundArray, int groundAmount, float gr
   world.groundAmount = groundAmount;
   world.gravityLevel[0] = gravityLevel[0];
   world.gravityLevel[1] = gravityLevel[1];
+  world.airResistence = airResistence;
   world.playerSpawn[0] = playerSpawn[0];
   world.playerSpawn[1] = playerSpawn[1];
   world.basePlayerSpawn[0] = playerSpawn[0];

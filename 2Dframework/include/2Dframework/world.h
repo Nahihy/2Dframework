@@ -11,9 +11,10 @@ typedef struct {
   float basePlayerSpawn[2];
   float bgMovementWithGround;
   float border[4];
+  float airResistence;
 } World;
 
-World createWorld(Background bg, Ground* groundArray, int groundAmount, float gravityLevel[2],
+World createWorld(Background bg, Ground* groundArray, int groundAmount, float gravityLevel[2], float airResistence,
                   float playerSpawn[2], float bgMovementWithGround, float border[4]);
 void worldDelete(World* world);
 void worldDraw(World* world);
