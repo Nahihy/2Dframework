@@ -40,7 +40,7 @@ int main() {
   while(!randererShouldClose(&randerer)) {
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT);
-    for(int i = 0; i < 5000; i++) puts("");
+    //for(int i = 0; i < 5000; i++) puts("");
     randererUpdateDeltaTime(&randerer);
     worldDraw(&world);
     playerDraw(&player);

@@ -16,3 +16,4 @@ if(NOT WIN32)
 else()
   target_link_libraries(2DframeworkShowcase PRIVATE 2Dframework randerer glad glfw OpenGL::GL stb)
 endif()
+ 
