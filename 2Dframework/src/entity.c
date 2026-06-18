@@ -45,6 +45,12 @@ Entity createEntity(const char* image, GLenum colorType, ModelAttrib* model, Col
   return entity;
 }
 
+// FUCK THIS FUCKING FUNCTION HOLY SHIT 
+// I CANNOT FUCKING START TO EXPLAIN THE AMOUNT OF SHIT I ATE FROM THIS BULSHIT OF A FUNCTION 
+// WHY TF IS IT SO FUCKING HARD AND SO FUCKING RANDOM IF IT WORKS WELL FUCK THIS BULLSHIT 
+// AAAAAAAAAAAAAAHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH
+// HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH
+// HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH
 void entityUpdateMovement(Entity* entity, float horiMovement, float vertMovement, Randerer* randerer, World* world) {
 
   float horiAccel = entity->accelaration * horiMovement;
@@ -55,7 +61,8 @@ void entityUpdateMovement(Entity* entity, float horiMovement, float vertMovement
   else if (entity->currHoriVelocity < -entity->maxVelocity) entity->currHoriVelocity = -entity->maxVelocity;
 
   if(entity->currStandedOnGround != -1)
-    entity->currHoriVelocity -= world->groundArray[entity->currStandedOnGround].friction * entity->currHoriVelocity * randerer->deltaTime * 60.0f;
+    entity->currHoriVelocity -= world->groundArray[entity->currStandedOnGround].friction
+      * entity->currHoriVelocity * randerer->deltaTime * 60.0f;
 
 
   entity->currHoriVelocity -= world->gravityLevel[0] * randerer->deltaTime;
