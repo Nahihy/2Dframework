@@ -30,7 +30,7 @@ Entity createEntity(const char* image, GLenum colorType, ModelAttrib* model, Col
   entity.maxVelocity = maxVelocity;
   entity.currHoriVelocity = 0.0f;
   entity.currVertVelocity = 0.0f;
-  entity.model.side = RIGHT;
+  entity.model.side = TDF_RIGHT;
   entity.currStandedOnGround = -1;
   entity.currJumpAccel = 0.0f;
   entity.jumpPower = jumpPower;
@@ -61,15 +61,15 @@ void entityUpdateMovement(Entity* entity, float horiMovement, float vertMovement
   entity->currHoriVelocity -= world->gravityLevel[0] * randerer->deltaTime;
 
   Direction direction;
-  if(entity->currHoriVelocity > 0.0f) direction = RIGHT;
-  else direction = LEFT;
+  if(entity->currHoriVelocity > 0.0f) direction = TDF_RIGHT;
+  else direction = TDF_LEFT;
   entity->currHoriVelocity -= world->airResistence * entity->currHoriVelocity * randerer->deltaTime * 60.0f;  
   if(direction * entity->currHoriVelocity < 0.0f) entity->currHoriVelocity = 0.0f;
 
   entity->xWorldCoord += entity->currHoriVelocity * randerer->deltaTime;
   gameObjectMove(&entity->obj, entity->currHoriVelocity * randerer->deltaTime, 0);
 
-  if (entity->collisionStatus == USE_COLLISION && worldCheckCollision(world, &entity->obj) != -1) {
+  if (entity->collisionStatus == TDF_USE_COLLISION && worldCheckCollision(world, &entity->obj) != -1) {
     entity->xWorldCoord -= entity->currHoriVelocity * randerer->deltaTime;
     gameObjectMove(&entity->obj, -(entity->currHoriVelocity * randerer->deltaTime), 0);
     float dir = (entity->currHoriVelocity > 0.0f) ? entity->collisionStep : -entity->collisionStep;
@@ -89,15 +89,15 @@ void entityUpdateMovement(Entity* entity, float horiMovement, float vertMovement
 
   entity->currVertVelocity -= world->gravityLevel[1] * randerer->deltaTime;
 
-  if(entity->currVertVelocity > 0.0f) direction = RIGHT;
-  else direction = LEFT;
+  if(entity->currVertVelocity > 0.0f) direction = TDF_RIGHT;
+  else direction = TDF_LEFT;
   entity->currVertVelocity -= world->airResistence * entity->currVertVelocity * randerer->deltaTime * 60.0f;
   if(entity->currVertVelocity * direction < 0.0f) entity->currVertVelocity = 0.0f;
 
   entity->yWorldCoord += entity->currVertVelocity * randerer->deltaTime;
   gameObjectMove(&entity->obj, 0, entity->currVertVelocity * randerer->deltaTime);
 
-  if (entity->collisionStatus == USE_COLLISION) {
+  if (entity->collisionStatus == TDF_USE_COLLISION) {
     entity->currStandedOnGround = worldCheckCollision(world, &entity->obj);
     if(entity->currStandedOnGround != -1) {
       entity->yWorldCoord -= entity->currVertVelocity * randerer->deltaTime;
@@ -154,8 +154,8 @@ void entityNextTex(Entity* entity) {
   entity->model.currModel += entity->model.nextTexMov;
   TexColumn* currColumn = &(entity->model.modelColumns[entity->model.currModelColumn]);
   if(currColumn->count < entity->model.currModel)
-    if(currColumn->actionAtEnd == EN_REPEAT) entity->model.currModel = 1;
-    else if(currColumn->actionAtEnd == EN_MIRROR) {
+    if(currColumn->actionAtEnd == TDF_RESTART) entity->model.currModel = 1;
+    else if(currColumn->actionAtEnd == TDF_REVERSE) {
       entity->model.currModel -= 2 * entity->model.nextTexMov;
       entity->model.nextTexMov = -entity->model.nextTexMov;
     }
@@ -176,7 +176,7 @@ void entityUpdateTex(Entity* entity) {
   int column = entity->model.modelColumns[entity->model.currModelColumn].column;
   float width = entity->model.modelsize[0];
 
-  if (entity->model.side == LEFT) {
+  if (entity->model.side == TDF_LEFT) {
     entity->obj.horiTexOffset = -(column + 1) * width;
   } else {
     entity->obj.horiTexOffset = column * width;
@@ -204,6 +204,6 @@ void entityClearCache(Entity* entity) {
   entity->currHoriVelocity = 0.0f;
   entity->currVertVelocity = 0.0f;
   entity->currStandedOnGround = -1;
-  entitySwitchToSide(entity, RIGHT);
+  entitySwitchToSide(entity, TDF_RIGHT);
   entityChangeTexColumn(entity, 0);
 }

@@ -2,8 +2,8 @@
 #include <randerer/randerer.h>
 
 typedef enum {
-  REPEAT = GL_REPEAT,
-  MIRROR = GL_MIRRORED_REPEAT
+  TDF_REPEAT_MOD = GL_REPEAT,
+  TDF_MIRROR_MOD = GL_MIRRORED_REPEAT
 } BGmode;
 
 typedef struct {

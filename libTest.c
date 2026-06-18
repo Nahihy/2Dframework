@@ -18,7 +18,7 @@ int main() {
   Randerer randerer = randererInit("2DframeworkTest", (int[]){800, 600});
   randererSetAutoFrameResizingKeepRatio(&randerer);
 
-  World world = createWorld(createBackground("background.png", GL_RGBA, 0.0f, 0.2f, 0.2f, 0.0f, BG_REPEAT),
+  World world = createWorld(createBackground("background.png", GL_RGBA, 0.0f, 0.2f, 0.2f, 0.0f, TDF_REPEAT_MOD),
                             (Ground[3]){createGround(64, "brick.png", GL_RGBA, 0.3f), 
                                         createGround(64, "ice.png", GL_RGBA, 0.05f),
                                         createGround(64, "mud.png", GL_RGBA, 0.6f)}, 3,
@@ -27,8 +27,8 @@ int main() {
   createParkourCourse(&world);
 
   Player player = createPlayer("mario.png", GL_RGBA, 0.2f, 180.0f, 60.0f, 240.0f, (float[2]){0.3333f, 0.3333f},
-                               (TexColumn){0, 1, EN_REPEAT}, (TexColumn){1, 3, EN_REPEAT},
-                               (TexColumn){2, 1, EN_REPEAT}, 0.0f, 0.01f, 0.095f, 0.095f);
+                               (TexColumn){0, 1, TDF_RESTART}, (TexColumn){1, 3, TDF_RESTART},
+                               (TexColumn){2, 1, TDF_RESTART}, 0.0f, 0.01f, 0.095f, 0.095f);
 
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   glEnable(GL_BLEND);

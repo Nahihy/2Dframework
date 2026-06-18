@@ -6,7 +6,7 @@ Player createPlayer(const char* image, GLenum colorType, float animationDelay, f
   Player player;
   player.animationDelay = animationDelay;
   player.delayToNextTex = animationDelay;
-  player.entity.collisionStatus = USE_COLLISION;
+  player.entity.collisionStatus = TDF_USE_COLLISION;
   player.entity.model.modelsize[0] = modelSize[0];
   player.entity.model.modelsize[1] = modelSize[1];
   player.entity.model.modelColumns = malloc(TOTAL_ANIM_SIZE * sizeof(TexColumn));
@@ -17,7 +17,7 @@ Player createPlayer(const char* image, GLenum colorType, float animationDelay, f
   player.entity.model.nextTexMov = 1;
   player.entity.model.currModel = 1;
   player.entity.model.currModelColumn = STAND_ANIM;
-  player.entity.model.side = RIGHT;
+  player.entity.model.side = TDF_RIGHT;
   player.entity.maxVelocity = maxVelocity;
   player.entity.accelaration = accelaration;
   player.entity.currHoriVelocity = 0.0f;
@@ -100,12 +100,12 @@ void playerGetUserMovement(Player* player, Randerer* randerer, World* world) {
   if(dPressed) {
     totalHoriMovement += 1.0f;
     if(player->entity.model.currModelColumn != WALK_ANIM) entityChangeTexColumn(&player->entity, WALK_ANIM);
-    entitySwitchToSide(&player->entity, RIGHT);
+    entitySwitchToSide(&player->entity, TDF_RIGHT);
   }
   if(aPressed) {
     totalHoriMovement -= 1.0f;
     if(player->entity.model.currModelColumn != WALK_ANIM) entityChangeTexColumn(&player->entity, WALK_ANIM);
-    entitySwitchToSide(&player->entity, LEFT);
+    entitySwitchToSide(&player->entity, TDF_LEFT);
   }
   entityUpdateMovement(&player->entity, totalHoriMovement, 0.0f, randerer, world);
 }

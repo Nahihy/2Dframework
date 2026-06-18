@@ -4,18 +4,18 @@
 #include <2Dframework/world.h>
 
 typedef enum {
-  USE_COLLISION,
-  IGNORE_COLLISION
+  TDF_USE_COLLISION,
+  TDF_IGNORE_COLLISION
 } CollisionStatus;
 
 typedef enum {
-  REPEAT,
-  MIRROR
+  TDF_RESTART,
+  TDF_REVERSE
 } TexAction;
 
 typedef enum {
-  LEFT = -1,
-  RIGHT = 1
+  TDF_LEFT = -1,
+  TDF_RIGHT = 1
 } Direction;
 
 typedef struct {
