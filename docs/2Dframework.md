@@ -141,9 +141,9 @@ A full-screen scrolling image. The UV coordinates you pass at creation define wh
 
 ### `createBackground`
 ```c
-Background createBackground(const char* image, int colorType,
+Background createBackground(const char* image, GLenum colorType,
                             float left, float right, float up, float down,
-                            int bgMode);
+                            BGmode bgMode);
 ```
 Creates a full-screen background sprite.
 - `image` — texture file name inside `textures/`
