@@ -417,7 +417,7 @@ The sprite sheet is divided into columns (animations) and rows (frames). `TexCol
 typedef struct {
   int column;      // which column of the sprite sheet
   int count;       // how many frames in this animation
-  int actionAtEnd; // TDF_RESTART or TDF_REVERSE
+  TexAction actionAtEnd; // TDF_RESTART or TDF_REVERSE
 } TexColumn;
 ```
 `modelSize[2]` in `ModelAttrib` is the UV size of one cell: `{1.0f / numColumns, 1.0f / numRows}`.
