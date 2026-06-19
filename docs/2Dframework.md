@@ -190,7 +190,7 @@ A set of tile objects that share the same texture and friction. The world can ho
 ### `createGround`
 ```c
 Ground createGround(int initialCount, const char texture[MAX_TEX_NAME_SIZE],
-                    int colorType, float friction);
+                    GLenum colorType, float friction);
 ```
 Allocates a ground set with an initial capacity of `initialCount` tiles. The internal array grows automatically when full.
 - `friction` — how quickly horizontal velocity is reduced when the player stands on this surface. `0.0` = no friction (frictionless), `1.0` = instant stop.
