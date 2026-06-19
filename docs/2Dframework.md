@@ -325,7 +325,7 @@ float baseWidth, baseHeight;  // size before scale is applied
 
 ### `createGameObject`
 ```c
-GameObject createGameObject(const char* image, int colorType, int texWrap,
+GameObject createGameObject(const char* image, GLenum colorType, GLenum texWrap,
                             Mesh mesh, float xCoord, float yCoord,
                             float width, float height, float rotation);
 ```
