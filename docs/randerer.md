@@ -320,7 +320,7 @@ Loads an image file (relative to the `textures/` directory) and uploads it to th
 | Parameter | Typical values |
 |---|---|
 | `wrap` | `GL_REPEAT`, `GL_MIRRORED_REPEAT`, `GL_CLAMP_TO_EDGE` |
-| `minFilter` | `GL_NEAReST/LINEAR_MIPMAP_NEAReST/LINEAR`, `GL_NEAREST/LINEAR` |
+| `minFilter` | `GL_NEAREST/LINEAR_MIPMAP_NEAREST/LINEAR`, `GL_NEAREST/LINEAR` |
 | `maxFilter` | `GL_NEAREST`, `GL_LINEAR` |
 | `colorType` | `GL_RGBA`, `GL_RGB` |
 
