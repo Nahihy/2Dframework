@@ -14,7 +14,7 @@ For Randerer's own types (`Randerer`, `Window`, keyboard input with `glfwGetKey`
 - Shader files shipped with 2Dframework placed in `shaders/`
 
 ```cmake
-add_subdirectory(2Dframework)           # also pulls in Randerer and Database
+add_subdirectory(path/to/2Dframework)           # also pulls in Randerer and Database
 target_link_libraries(yourTarget PUBLIC 2Dframework)
 ```
 
