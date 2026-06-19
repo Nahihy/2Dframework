@@ -10,8 +10,8 @@ For Randerer's own types (`Randerer`, `Window`, keyboard input with `glfwGetKey`
 
 - Everything required by **Randerer** library
 - Everything required by **Database** library
-- Texture images placed in the `textures/` folder next to the executable
-- Shader files shipped with 2Dframework placed in `shaders/` (handled by CMake automatically)
+- Texture images placed in the `textures/` folder next to the executable or the folder you set with TEXTURE_DIR in cmake.
+- Shader files shipped with 2Dframework placed in `shaders/`
 
 ```cmake
 add_subdirectory(2Dframework)           # also pulls in Randerer and Database
