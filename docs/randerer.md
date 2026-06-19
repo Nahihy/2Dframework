@@ -18,7 +18,7 @@ In practice you will rarely use the lower-level types directly when working insi
   - **stbi** — image loading
 
 ```cmake
-add_subdirectory(baseLibs/randerer)
+add_subdirectory(path/to/randerer)
 target_link_libraries(yourTarget PUBLIC randerer)
 ```
 
