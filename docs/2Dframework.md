@@ -63,14 +63,15 @@ int main() {
   World world = createWorld(
     createBackground("background.png", GL_RGBA,
                      0.0f, 1.0f, 1.0f, 0.0f,  // UV: left, right, up, down
-                     BG_REPEAT),
+                     TDF_REPEAT_MOD),
     (Ground[]){
       createGround(64, "tiles.png", GL_RGBA, 0.3f),   // brick-like
       createGround(64, "ice.png",   GL_RGBA, 0.05f),  // slippery
     }, 2,                                  // groundAmount
     (float[2]){0.0f, 1.0f},               // gravity: x=0, y=1
+    0.01f,                                 // airResistence
     (float[2]){0.0f, 0.0f},               // player spawn (world coords)
-    0.1f,                                 // background parallax factor
+    0.1f,                                  // background parallax factor
     (float[4]){-30.0f, 30.0f, 20.0f, -20.0f} // border: left, right, top, bottom
   );
 
@@ -87,9 +88,9 @@ int main() {
     1.0f,         // acceleration
     4.0f,         // jumpPower
     (float[2]){0.3333f, 0.3333f},          // texture cell size (1/cols, 1/rows)
-    (TexColumn){0, 1, EN_REPEAT},          // stand: column 0, 1 frame
-    (TexColumn){1, 3, EN_REPEAT},          // walk:  column 1, 3 frames
-    (TexColumn){2, 1, EN_REPEAT},          // jump:  column 2, 1 frame
+    (TexColumn){0, 1, TDF_RESTART},          // stand: column 0, 1 frame
+    (TexColumn){1, 3, TDF_RESTART},          // walk:  column 1, 3 frames
+    (TexColumn){2, 1, TDF_RESTART},          // jump:  column 2, 1 frame
     0.0f, 0.0f,   // starting screen position
     0.1f, 0.1f    // width, height
   );
@@ -135,8 +136,8 @@ A full-screen scrolling image. The UV coordinates you pass at creation define wh
 ### Constants
 | Constant | Value | Meaning |
 |---|---|---|
-| `BG_REPEAT` | `GL_REPEAT` | Tile the texture |
-| `BG_MIRROR` | `GL_MIRRORED_REPEAT` | Mirror-tile the texture |
+| `TDF_REPEAT_MOD` | `GL_REPEAT` | Tile the texture |
+| `TDF_MIRROR_MOD` | `GL_MIRRORED_REPEAT` | Mirror-tile the texture |
 
 ### `createBackground`
 ```c
@@ -148,7 +149,7 @@ Creates a full-screen background sprite.
 - `image` — texture file name inside `textures/`
 - `colorType` — `GL_RGBA` or `GL_RGB`
 - `left`, `right`, `up`, `down` — UV coordinates of the four edges. `(0, 1, 1, 0)` shows the full texture once. Larger values tile it.
-- `bgMode` — `BG_REPEAT` or `BG_MIRROR`
+- `bgMode` — `TDF_REPEAT_MOD` or `TDF_MIRROR_MOD`
 
 ### `backgroundDraw`
 ```c
@@ -259,13 +260,14 @@ Bundles a background and all ground sets into one object. Also stores gravity, t
 ### `createWorld`
 ```c
 World createWorld(Background bg, Ground* groundArray, int groundAmount,
-                  float gravityLevel[2], float playerSpawn[2],
-                  float bgMovementWithGround, float border[4]);
+                  float gravityLevel[2], float airResistence,
+                  float playerSpawn[2], float bgMovementWithGround, float border[4]);
 ```
 - `bg` — Background object for the world
 - `groundArray` — a temporary array of `Ground` values; they are copied internally.
 - `groundAmount` — number of grounds in the array.
 - `gravityLevel` — `{x, y}` gravity applied to entities each frame. Typically `{0.0f, 1.0f}` (downward).
+- `airResistence` — velocity damping applied to entities every frame regardless of surface contact. Small values (e.g. `0.01f`) give a natural deceleration in the air; `0.0f` means no air friction.
 - `playerSpawn` — world coordinates where `playerSendPlayerToSpawn` places the player.
 - `bgMovementWithGround` — parallax factor for the background when the world scrolls. `0.0` = background fixed, `1.0` = background moves with the world.
 - `border` — `{left, right, top, bottom}` in world coordinates. When the player's world position leaves this rectangle, `playerGetUserMovement` automatically sends them back to spawn (and then to the last saved location).
@@ -415,7 +417,7 @@ The sprite sheet is divided into columns (animations) and rows (frames). `TexCol
 typedef struct {
   int column;      // which column of the sprite sheet
   int count;       // how many frames in this animation
-  int actionAtEnd; // EN_REPEAT or EN_MIRROR
+  int actionAtEnd; // TDF_RESTART or TDF_REVERSE
 } TexColumn;
 ```
 `modelSize[2]` in `ModelAttrib` is the UV size of one cell: `{1.0f / numColumns, 1.0f / numRows}`.
@@ -423,15 +425,15 @@ typedef struct {
 ### Constants
 | Constant | Meaning |
 |---|---|
-| `EN_USE_COLLISION` | Entity participates in collision |
-| `EN_IGNORE_COLLISION` | Entity ignores collision (ghost) |
-| `EN_REPEAT` | Animation loops back to frame 1 at the end |
-| `EN_MIRROR` | Animation reverses at the end |
+| `TDF_USE_COLLISION` | Entity participates in collision |
+| `TDF_IGNORE_COLLISION` | Entity ignores collision (ghost) |
+| `TDF_RESTART` | Animation loops back to frame 1 at the end |
+| `TDF_REVERSE` | Animation reverses at the end |
 
 ### `createEntity`
 ```c
 Entity createEntity(const char* image, int colorType, ModelAttrib* model,
-                    int ignoreCollision, float accelaration, float maxVelocity,
+                    CollisionStatus collisionStatus, float accelaration, float maxVelocity,
                     float jumpPower, float xCoord, float yCoord,
                     float width, float height);
 ```
@@ -466,13 +468,13 @@ Switches to a different animation column and resets to frame 1.
 ```c
 void entityNextTex(Entity* entity);
 ```
-Advances to the next animation frame. At the end of the animation applies `EN_REPEAT` or `EN_MIRROR`.
+Advances to the next animation frame. At the end of the animation applies `TDF_RESTART` or `TDF_REVERSE`.
 
 ### `entitySwitchToSide`
 ```c
 void entitySwitchToSide(Entity* entity, Direction side);
 ```
-Flips the sprite left (`LEFT`) or right (`RIGHT`) by adjusting the UV offset.
+Flips the sprite left (`TDF_LEFT`) or right (`TDF_RIGHT`) by adjusting the UV offset.
 
 ### `entityZoom` / `entitySetScale`
 ```c
@@ -528,7 +530,7 @@ Player createPlayer(const char* image, int colorType, float animationDelay,
                     TexColumn standAnim, TexColumn walkAnim, TexColumn jumpAnim,
                     float xCoord, float yCoord, float width, float height);
 ```
-Creates a player with three animations on one sprite sheet. `animationDelay` is the number of frames between animation steps (higher = slower animation). The player save file is always `player.dat` (BINARY).
+Creates a player with three animations on one sprite sheet. `animationDelay` is the time in seconds between animation frame advances (higher = slower animation). The player save file is always `player.dat` (BINARY).
 
 **Sprite-sheet layout example** — 3 columns, 3 rows:
 ```
@@ -537,10 +539,10 @@ Column 1 (walk):  rows 0–2
 Column 2 (jump):  row 0
 ```
 ```c
-(float[2]){1.0f/3, 1.0f/3}      // modelSize: one cell = 1/3 of sheet
-(TexColumn){0, 1, EN_REPEAT}    // stand: col 0, 1 frame
-(TexColumn){1, 3, EN_REPEAT}    // walk:  col 1, 3 frames, loops
-(TexColumn){2, 1, EN_REPEAT}    // jump:  col 2, 1 frame
+(float[2]){1.0f/3, 1.0f/3}       // modelSize: one cell = 1/3 of sheet
+(TexColumn){0, 1, TDF_RESTART}   // stand: col 0, 1 frame
+(TexColumn){1, 3, TDF_RESTART}   // walk:  col 1, 3 frames, loops
+(TexColumn){2, 1, TDF_RESTART}   // jump:  col 2, 1 frame
 ```
 
 ### `playerGetUserMovement`

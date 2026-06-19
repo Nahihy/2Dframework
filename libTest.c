@@ -26,7 +26,7 @@ int main() {
   
   createParkourCourse(&world);
 
-  Player player = createPlayer("mario.png", GL_RGBA, 0.2f, 180.0f, 60.0f, 240.0f, (float[2]){0.3333f, 0.3333f},
+  Player player = createPlayer("mario.png", GL_RGBA, 0.2f, 180.0f, 60.0f, 260.0f, (float[2]){0.3333f, 0.3333f},
                                (TexColumn){0, 1, TDF_RESTART}, (TexColumn){1, 3, TDF_RESTART},
                                (TexColumn){2, 1, TDF_RESTART}, 0.0f, 0.01f, 0.095f, 0.095f);
 
@@ -38,7 +38,6 @@ int main() {
   while(!randererShouldClose(&randerer)) {
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT);
-    // for(int i = 0; i < 5000; i++) puts("");
     randererUpdateDeltaTime(&randerer);
     worldDraw(&world);
     playerDraw(&player);

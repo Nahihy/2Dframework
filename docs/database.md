@@ -185,7 +185,7 @@ Writes the stored string into `outputBuffer`. If the variable is not found, sets
 ```c
 char databaseGetChar(Database* database, const char* varName);
 ```
-Returns the stored `char`. Returns `'\0'` if not found.
+Returns the stored `char`. Returns `'\0'` if not found (BINARY mode) or `'\n'` if not found (TEXT mode).
 
 ---
 

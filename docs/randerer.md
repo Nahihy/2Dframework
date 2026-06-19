@@ -171,7 +171,7 @@ Destroys the window and terminates GLFW. Call this once at the end of the progra
 
 #### `randererUpdateDeltaTime`
 ```c
-void randererUpdateDeltaTime(&randerer);
+void randererUpdateDeltaTime(Randerer* randerer);
 ```
 Recalculates `randerer.deltaTime` as the time in seconds since the last call. Call once at the top of each frame so that physics and movement scale correctly regardless of frame rate.
 

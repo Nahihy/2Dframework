@@ -6,7 +6,7 @@ Please see the docs for more info.
 usage:
 to compile and use the library all you need is a c compiler and cmake.
 
-cmake can be installed from the website cmake.org, and for the compiler you can use gcc clang or msvc etc.
+cmake can be installed from the website cmake.org, and for the compiler you can use gcc clang or msvc etc. (or use your respective package manager)
 
 to edit in vscode you can install the cmake tools extension and it should work.
 
