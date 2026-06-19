@@ -306,21 +306,21 @@ Deletes the compiled shader program from the GPU.
 
 #### `createTexture`
 ```c
-Texture createTexture(int unit);
+Texture createText(GLenum unit);
 ```
 Allocates a GPU texture object bound to the given texture unit (e.g. `GL_TEXTURE0`, `GL_TEXTURE1`).
 
 #### `textureLoad`
 ```c
-void textureLoad(Texture* texture, const char* image, int wrap,
-                 int minFilter, int maxFilter, int colorType);
+void textureLoad(Texture* texture, const char* image, GLenum wrap,
+                 GLenum minFilter, GLenum maxFilter, GLenum colorType);
 ```
 Loads an image file (relative to the `textures/` directory) and uploads it to the GPU.
 
 | Parameter | Typical values |
 |---|---|
 | `wrap` | `GL_REPEAT`, `GL_MIRRORED_REPEAT`, `GL_CLAMP_TO_EDGE` |
-| `minFilter` | `GL_LINEAR_MIPMAP_LINEAR`, `GL_NEAREST` |
+| `minFilter` | `GL_NEAReST/LINEAR_MIPMAP_NEAReST/LINEAR`, `GL_NEAREST/LINEAR` |
 | `maxFilter` | `GL_NEAREST`, `GL_LINEAR` |
 | `colorType` | `GL_RGBA`, `GL_RGB` |
 
