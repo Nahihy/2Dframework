@@ -432,7 +432,7 @@ typedef struct {
 
 ### `createEntity`
 ```c
-Entity createEntity(const char* image, int colorType, ModelAttrib* model,
+Entity createEntity(const char* image, GLenum colorType, ModelAttrib* model,
                     CollisionStatus collisionStatus, float accelaration, float maxVelocity,
                     float jumpPower, float xCoord, float yCoord,
                     float width, float height);
@@ -524,7 +524,7 @@ A ready-to-use player entity with three built-in animations (stand, walk, jump),
 
 ### `createPlayer`
 ```c
-Player createPlayer(const char* image, int colorType, float animationDelay,
+Player createPlayer(const char* image, GLenum colorType, float animationDelay,
                     float maxVelocity, float accelaration, float jumpPower,
                     float modelSize[2],
                     TexColumn standAnim, TexColumn walkAnim, TexColumn jumpAnim,
