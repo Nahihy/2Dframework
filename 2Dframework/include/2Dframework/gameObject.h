@@ -1,8 +1,8 @@
 #pragma once
 #include <randerer/randerer.h>
 
-#define GO_SQUARE createSquareMeshTemp()
-#define GO_TRIANGLE createTriangleMeshTemp()
+#define TDF_SQUARE createSquareMeshTemp()
+#define TDF_TRIANGLE createTriangleMeshTemp()
 
 
 typedef struct {

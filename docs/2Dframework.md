@@ -329,7 +329,7 @@ GameObject createGameObject(const char* image, GLenum colorType, GLenum texWrap,
                             Mesh mesh, float xCoord, float yCoord,
                             float width, float height, float rotation);
 ```
-Creates a textured game object. For entity meshes you usually pass `createEntityMesh(modelSize)` as the mesh. Ground tiles use `GO_SQUARE`.
+Creates a textured game object. For entity meshes you usually pass `createEntityMesh(modelSize)` as the mesh. Ground tiles use `TDF_SQUARE`.
 
 ### `gameObjectDraw`
 ```c

@@ -18,7 +18,7 @@ Ground createGround(int initialCount, const char texture[MAX_TEX_NAME_SIZE], GLe
 void groundAdd(Ground* ground, float xCoord, float yCoord, float width, float height, float rotation) {
   if(ground->maxCount <= ground->objCount)
     groundEnlarge(ground, 1);
-  ground->objArray[ground->objCount] = createGameObject(ground->texture, ground->colorType, GL_REPEAT, GO_SQUARE,
+  ground->objArray[ground->objCount] = createGameObject(ground->texture, ground->colorType, GL_REPEAT, TDF_SQUARE,
                                                         xCoord, yCoord, width, height, rotation);
   ground->objCount++;
 }
